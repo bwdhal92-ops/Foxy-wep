@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Portal</title>
+  <link rel="stylesheet" href="assets/css/developer.css">
+  <style>.foxy-lang-select option{color:#111}</style>
+  <script src="assets/js/i18n.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="developer.html"><span class="brand-mark"><img src="assets/img/foxy.webp" alt="Developer Portal"></span> Developer Portal</a>
+    <nav class="top-links" aria-label="روابط المطورين" data-i18n-aria="dev.nav_links">
+      <a href="#home">Home</a><a href="#applications">Applications</a><a href="#servers">Servers</a>
+    </nav>
+    <div class="account-menu-wrap"><button id="account-menu-btn" class="account-menu-btn" type="button" title="الحساب" aria-expanded="false" data-i18n-title="app_settings.account_section"><span id="account-avatar" class="account-avatar">?</span><span id="account-menu-name">الحساب</span><span class="account-chevron">⌄</span></button><select class="foxy-lang-select" aria-label="Language" style="margin-inline-start:8px;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.06);color:inherit;border:1px solid rgba(255,255,255,.12);font-weight:700;cursor:pointer"></select><section id="account-popover" class="account-popover hidden" role="dialog" aria-label="قائمة الحساب" data-i18n-aria="dev.account_menu"><div class="account-popover-user"><span id="popover-avatar" class="popover-avatar">?</span><div><strong id="popover-name">—</strong><small id="popover-email">—</small></div></div><div class="account-divider"></div><button id="theme-toggle" class="account-menu-item" type="button"><span>Theme</span><span class="theme-options"><span class="theme-option active">☾</span><span class="theme-option">☀</span></span></button><a class="account-menu-item" href="#account"><span>Manage account</span><span>↗</span></a><a class="account-menu-item" href="#language"><span>Language<small>English, US</small></span><span>↗</span></a><button id="logout-btn" class="account-menu-item logout-item" type="button"><span>Log Out</span></button></section></div>
+  </header>
+
+  <main class="portal-shell">
+    <aside class="app-sidebar">
+      <div class="sidebar-heading"><span>Applications</span><button id="new-app-btn" class="plus-btn" title="إنشاء تطبيق" data-i18n-title="dev.create_app">+</button></div>
+      <div id="app-list" class="app-list"></div>
+      <button id="empty-create-btn" class="create-link">+ New Application</button>
+      <div class="sidebar-footer">Developer Portal<br><span data-i18n="dev.fb_connected">متصل بـ Firebase</span></div>
+    </aside>
+
+    <section class="portal-content">
+      <div id="home-view" class="portal-view">
+        <div class="page-heading"><div><p class="eyebrow">DEVELOPER PORTAL</p><h1>Home</h1></div></div>
+        <div class="home-sections"><section class="home-section"><div class="section-title"><h2>Applications</h2><p data-i18n="dev.apps_desc">كل البوتات والتطبيقات التي أنشأتها.</p></div><div id="home-app-list" class="portal-list"></div></section><section class="home-section"><div class="section-title"><h2>Servers</h2><p data-i18n="dev.servers_desc">السيرفرات التي أنشأتها.</p></div><div id="home-server-list" class="portal-list"></div></section></div>
+      </div>
+      <div id="applications-view" class="portal-view hidden">
+        <div class="page-heading"><div><p class="eyebrow">APPLICATIONS</p><h1>Applications</h1></div><button id="applications-create-btn" class="primary-btn">New Application</button></div><div id="applications-list" class="portal-list large-list"></div>
+      </div>
+      <div id="servers-view" class="portal-view hidden">
+        <div class="page-heading"><div><p class="eyebrow">SERVERS</p><h1>Servers</h1></div></div><div id="servers-list" class="portal-list large-list"></div>
+      </div>
+      <div id="welcome-view" class="welcome-view hidden">
+        <div class="welcome-icon"><img src="assets/img/foxy.webp" alt="Developer Portal"></div><h1>Developer Portal</h1>
+        <p data-i18n="dev.hero_desc">أنشئ تطبيقاتك وأدر إعدادات البوت و OAuth2 من مكان واحد.</p>
+        <button id="welcome-create-btn" class="primary-btn" data-i18n="dev.create_new_app">إنشاء تطبيق جديد</button>
+      </div>
+
+      <div id="app-view" class="hidden">
+        <div class="page-heading"><div><p class="eyebrow">APPLICATION</p><h1 id="app-title" data-i18n="dev.new_app">تطبيق جديد</h1></div><button id="delete-app-btn" class="danger-btn" data-i18n="dev.delete_app">حذف التطبيق</button></div>
+        <div class="tabbar" role="tablist">
+          <button class="tab active" data-tab="general">General Information</button>
+          <button class="tab" data-tab="installation">Installation</button>
+          <button class="tab" data-tab="oauth2">Authentication</button>
+          <button class="tab" data-tab="bot">Bot</button>
+          <button class="tab" data-tab="rich">Rich Presence</button>
+        </div>
+
+        <section id="tab-general" class="tab-panel active-panel">
+          <div class="section-title"><h2>General Information</h2><p data-i18n="dev.app_q">ما اسم تطبيقك؟ وما الذي يقدمه؟</p></div>
+          <div class="form-grid">
+            <label class="field full"><span>Name</span><input id="app-name" maxlength="80" placeholder="اسم التطبيق" data-i18n-placeholder="dev.app_name"></label>
+            <label class="field full"><span>Description <small>(maximum 400 characters)</small></span><textarea id="app-description" maxlength="400" placeholder="اكتب وصفًا مختصرًا لتطبيقك" data-i18n-placeholder="dev.app_desc_ph"></textarea></label>
+            <label class="field full"><span>Tags <small>(maximum 5)</small></span><input id="app-tags" placeholder="bot, music, games"></label>
+            <div class="info-card"><span>Application ID</span><strong id="app-id">—</strong><button data-copy="app-id">Copy</button></div>
+            <div class="info-card"><span>Public Key</span><strong id="app-key">—</strong><button data-copy="app-key">Copy</button></div>
+            <div class="info-card wide creator-card"><span>Created By</span><strong id="app-creator">—</strong><small id="app-creator-id">—</small></div>
+          </div>
+          <button id="save-general-btn" class="primary-btn" data-i18n="app_settings.save_changes">حفظ التغييرات</button>
+        </section>
+
+        <section id="tab-installation" class="tab-panel"><div class="section-title"><h2>Installation</h2><p data-i18n="dev.install_desc">أضف البوت إلى سيرفراتك داخل موقعك.</p></div><div class="choice-grid"><label class="choice-card"><input id="user-install" type="checkbox" checked><b>User Install</b><span data-i18n="dev.install_user">تثبيت التطبيق على حساب المستخدم.</span></label><label class="choice-card"><input id="guild-install" type="checkbox" checked><b>Guild Install</b><span data-i18n="dev.install_guild">إضافة التطبيق إلى السيرفرات.</span></label></div><div class="info-card wide"><span>Site Install Link</span><strong id="install-link">—</strong><button data-copy="install-link">Copy</button></div><div class="install-servers-card"><h3>Add Bot to a Server</h3><p data-i18n="dev.install_servers_note">تظهر السيرفرات التي أنشأتها أو تملك صلاحية إدارتها.</p><div id="install-server-list" class="install-server-list"></div></div><button id="save-install-btn" class="primary-btn" data-i18n="dev.save_install">حفظ إعدادات التثبيت</button></section>
+
+        <section id="tab-oauth2" class="tab-panel"><div class="section-title"><h2>OAuth2</h2><p data-i18n="dev.oauth_desc">استخدم تطبيقك كنظام تسجيل دخول أو للوصول إلى Discord API.</p></div><div class="form-grid"><label class="field full"><span>Redirect URI</span><input id="redirect-uri" placeholder="https://example.com/oauth/callback"></label><label class="field full"><span>Scopes</span><input id="oauth-scopes" value="identify email applications.commands"></label></div><div class="info-card wide"><span>Client ID</span><strong id="oauth-client-id">—</strong><button data-copy="oauth-client-id">Copy</button></div><div class="info-card wide client-secret-card"><span>Client Secret</span><strong id="client-secret-value">Hidden for security</strong><button id="copy-client-secret-btn" data-copy="client-secret-value" disabled>Copy</button><button id="reset-secret-btn" type="button" class="secondary-btn">Reset Secret</button></div><div class="warning-card" data-i18n="dev.no_secret">لا تحفظ Client Secret في الواجهة أو Firebase. استخدم Backend آمن فقط، ويظهر السر الجديد مرة واحدة بعد إعادة التعيين.</div><button id="save-oauth-btn" class="primary-btn" data-i18n="dev.save_oauth">حفظ OAuth2</button></section>
+
+        <section id="tab-bot" class="tab-panel"><div class="section-title"><h2>Bot</h2><p data-i18n="dev.bot_desc">نظام البوت الخاص بموقعك، مستقل تمامًا عن Discord.</p></div><div class="bot-preview"><div class="bot-avatar">◈</div><div><strong id="bot-name" data-i18n="dev.app_name">اسم التطبيق</strong><span>Site Bot</span></div><button id="reset-token-btn" class="secondary-btn" data-i18n="dev.create_token">إنشاء Token</button></div><div class="bot-token-card"><label>Bot Token</label><div class="token-row"><strong id="bot-token-value">لم يتم إنشاء Token</strong><button id="copy-bot-token-btn" type="button" disabled>Copy</button></div><small data-i18n="dev.token_once">يُعرض التوكن الجديد مرة واحدة فقط. ضعه داخل بوت Java على سيرفر المطور.</small></div><div class="choice-grid"><label class="choice-card"><input id="public-bot" type="checkbox" checked><b>Public Bot</b><span data-i18n="dev.bot_install_note">يمكن تثبيت البوت في السيرفرات المسموحة.</span></label><label class="choice-card"><input id="message-intent" type="checkbox"><b>Message Intent</b><span data-i18n="dev.bot_msg_events">السماح للبوت بقراءة أحداث الرسائل.</span></label><label class="choice-card"><input id="member-intent" type="checkbox"><b>Members Intent</b><span data-i18n="dev.member_events">استقبال أحداث الأعضاء.</span></label></div><div class="commands-builder"><div class="builder-heading"><div><h3>Bot Commands</h3><p data-i18n="dev.cmd_desc">الأوامر التي يستطيع بوتك تنفيذها داخل موقعك.</p></div><button id="add-command-btn" type="button" class="secondary-btn" data-i18n="dev.add_cmd">+ إضافة أمر</button></div><div id="commands-list" class="commands-list"></div></div><div class="permissions-builder"><h3>Bot Permissions</h3><p data-i18n="dev.perm_calc">اختر صلاحيات البوت وسيتم حساب Permissions Integer تلقائيًا.</p><div class="permission-group"><h4>General Permissions</h4><div id="general-permissions" class="permission-grid"></div></div><div class="permission-group"><h4>Text Permissions</h4><div id="text-permissions" class="permission-grid"></div></div><div class="permission-group"><h4>Voice Permissions</h4><div id="voice-permissions" class="permission-grid"></div></div><div class="permissions-total"><span>Permissions Integer</span><strong id="permissions-integer">0</strong><button id="copy-permissions-btn" type="button">Copy</button></div></div><button id="save-bot-btn" class="primary-btn" data-i18n="dev.save_bot">حفظ إعدادات البوت</button></section>
+
+        <section id="tab-rich" class="tab-panel"><div class="section-title"><h2>Rich Presence Visualizer</h2><p data-i18n="dev.presence_preview">عاين كيف سيظهر نشاط تطبيقك في ملف المستخدم.</p></div><div class="form-grid"><label class="field"><span>State</span><input id="presence-state" value="Playing Solo"></label><label class="field"><span>Details</span><input id="presence-details" value="Competitive"></label><label class="field"><span>Large Image Key</span><input id="presence-image" placeholder="asset_key"></label><label class="field"><span>Large Image Text</span><input id="presence-image-text" placeholder="وصف الصورة" data-i18n-placeholder="dev.img_desc_ph"></label></div><div class="presence-preview"><div class="presence-avatar">◈</div><div><b id="presence-app-name" data-i18n="dev.app_name">اسم التطبيق</b><p id="presence-state-preview">Playing Solo</p><small id="presence-details-preview">Competitive</small></div></div></section>
+      </div>
+    </section>
+  </main>
+  <div id="toast" class="toast"></div>
+  <script type="module" src="assets/js/developer.js"></script>
+</body>
+</html>

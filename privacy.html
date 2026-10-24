@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سياسة الخصوصية — Foxy</title>
+<meta name="description" content="سياسة الخصوصية لمنصة Foxy — كيف نجمع بياناتك ونستخدمها ونحميها.">
+<link rel="icon" type="image/png" href="assets/img/foxy.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070b16; --bg2:#0b1120; --card:#111a2e; --line:rgba(255,255,255,.08);
+  --cyan:#00e5ff; --purple:#7c3aed; --green:#22c55e;
+  --text:#f1f5f9; --muted:#94a3b8; --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);line-height:1.9;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:860px;margin:0 auto;padding:0 20px}
+.nav{position:sticky;top:0;z-index:100;background:rgba(7,11,22,.9);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:.65rem;font-weight:900;font-size:1.3rem}
+.logo img{width:38px;height:38px;border-radius:11px}
+.btn{display:inline-block;padding:.7rem 1.6rem;border-radius:12px;font-weight:800;background:linear-gradient(135deg,var(--cyan),var(--purple));color:#04121a}
+header.hero{padding:3.5rem 0 1.5rem;text-align:center}
+header.hero h1{font-size:2rem;font-weight:900}
+header.hero p{color:var(--muted);margin-top:.5rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.6rem;margin:1.2rem 0}
+.card h2{font-size:1.15rem;font-weight:800;margin-bottom:.6rem;color:var(--cyan)}
+.card p,.card li{color:#cbd5e1;font-size:.95rem}
+.card ul{list-style:none;margin-top:.5rem}
+.card ul li{padding:.35rem 0 .35rem 1.4rem;position:relative}
+.card ul li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:900}
+.card b{color:var(--text)}
+footer{border-top:1px solid var(--line);margin-top:2.5rem;padding:1.6rem 0 2.5rem;color:var(--muted);font-size:.85rem;text-align:center}
+@media(max-width:640px){header.hero h1{font-size:1.5rem}.card{padding:1.2rem}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="wrap">
+    <a href="/" class="logo"><img src="assets/img/foxy.png" alt="Foxy" onerror="this.src='https://placehold.co/80x80/00e5ff/000?text=F'"><span>FOXY</span></a>
+    <a href="login.html" class="btn">ادخل التطبيق</a>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <h1>سياسة الخصوصية</h1>
+  <p>آخر تحديث: 25 سبتمبر 2026 — تسري على موقع وتطبيق Foxy</p>
+</header>
+
+<main class="wrap">
+  <div class="card">
+    <h2>1) من نحن</h2>
+    <p>منصة <b>Foxy</b> للغرف الصوتية والمجتمعات. باستخدامك للمنصة أنت توافق على هذه السياسة. لو مش موافق، من فضلك متستخدمش الخدمة.</p>
+  </div>
+
+  <div class="card">
+    <h2>2) البيانات اللي بنجمعها</h2>
+    <ul>
+      <li><b>بيانات الحساب:</b> الاسم، البريد الإلكتروني، والصورة الشخصية عبر مزود الدخول (مثل Google) بتتخزن في Firebase Authentication.</li>
+      <li><b>الملف الشخصي:</b> اسم العرض، النبذة، الحالة، الصورة والغلاف، وروابط التواصل اللي بتضيفها بنفسك.</li>
+      <li><b>المحتوى:</b> الرسائل، التصويتات والأصوات، السيرفرات والقنوات اللي بتنشئها أو بتنضم لها.</li>
+      <li><b>الصور المرفوعة:</b> الصور اللي بترفعها داخل المحادثات بتتخزن لدى خدمة استضافة صور خارجية (ImgBB) بروابط عامة.</li>
+      <li><b>الصوت:</b> المحادثات الصوتية لحظية عبر WebRTC ولا يتم تسجيلها أو تخزينها من طرفنا.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>3) ربط حساب Google / قناة YouTube</h2>
+    <p>لو اخترت ربط قناتك، بنطلب صلاحية قراءة <b>youtube.readonly</b> فقط، وبنستخدمها مرة واحدة لجلب اسم القناة ورابطها لعرض شارة التوثيق على بروفايلك. لا ننشر أو نعدل أي حاجة في قناتك، وتقدر تفصل الربط في أي وقت بحذف الرابط من إعدادات الملف الشخصي.</p>
+  </div>
+
+  <div class="card">
+    <h2>4) بنستخدم البيانات في إيه</h2>
+    <ul>
+      <li>تشغيل الخدمة: الدخول، عرض البروفايلات، الرسائل، والتصويتات.</li>
+      <li>الحماية: منع إساءة الاستخدام والسبام وتطبيق قواعد السيرفرات.</li>
+      <li>التحسين: فهم الأعطال وتحسين الأداء. لا نبيع بياناتك لأي طرف ثالث.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>5) أطراف ثالثة بتعالج بياناتك</h2>
+    <ul>
+      <li><b>Google Firebase</b> (المصادقة، قاعدة البيانات، الاستضافة).</li>
+      <li><b>ImgBB</b> لاستضافة الصور المرفوعة.</li>
+      <li><b>Google / YouTube API</b> فقط عند ربط قناتك وبموافقتك.</li>
+      <li>منصات التواصل اللي بتضيف روابطها بنفسك (تُفتح في نافذة جديدة وتخضع لسياساتها).</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>6) ملفات تعريف الارتباط والتخزين المحلي</h2>
+    <p>بنستخدم جلسة الدخول (Firebase Auth) والتخزين المحلي للمتصفح (localStorage) لحفظ تفضيلاتك مثل اللغة والمظهر وبيانات الجلسة. تقدر تمسحها من إعدادات المتصفح، لكن ده هيسجّل خروجك ويصفّر تفضيلاتك.</p>
+  </div>
+
+  <div class="card">
+    <h2>7) حقوقك</h2>
+    <ul>
+      <li>تعديل أو حذف بروفايلك وروابطك من داخل الإعدادات في أي وقت.</li>
+      <li>طلب نسخة من بياناتك أو حذف حسابك بالكامل عبر التواصل معنا.</li>
+      <li>سحب موافقة ربط YouTube بحذف الرابط من الملف الشخصي.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>8) الأطفال</h2>
+    <p>الخدمة غير موجهة للأطفال تحت 13 سنة، ولا نجمع بياناتهم عمداً. لو اكتشفنا حساباً مخالفاً هنحذفه.</p>
+  </div>
+
+  <div class="card">
+    <h2>9) تغييرات السياسة</h2>
+    <p>ممكن نحدّث السياسة دي، وهنغيّر تاريخ «آخر تحديث» فوق. الاستمرار في الاستخدام بعد التحديث معناه الموافقة.</p>
+  </div>
+
+  <div class="card">
+    <h2>10) اتصل بنا</h2>
+    <!-- عدّل البريد التالي لبريد الدعم الحقيقي الخاص بك -->
+    <p>لأي استفسار عن الخصوصية أو طلب حذف البيانات: <b dir="ltr">support@foxy.xo.je</b></p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">© 2026 Foxy App. جميع الحقوق محفوظة. · <a href="/" style="text-decoration:underline">الرئيسية</a></div>
+</footer>
+</body>
+</html>

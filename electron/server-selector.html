@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="electron.select_title">Foxy — اختر السيرفر</title>
+<style>
+  :root {
+    --bg: #02040b;
+    --cyan: #00eeff;
+    --pink: #ff1f72;
+    --purple: #8b3cff;
+    --green: #00ffb2;
+    --orange: #ff6b1a;
+    --text: #e4f0ff;
+    --muted: rgba(164, 210, 255, 0.55);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.8rem;
+    position: relative;
+    overflow: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0, 238, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 238, 255, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .glow { position: fixed; border-radius: 50%; filter: blur(110px); opacity: .18; pointer-events: none; }
+  .glow.cyan { width: 340px; height: 340px; background: var(--cyan); top: -100px; right: -100px; }
+  .glow.purple { width: 300px; height: 300px; background: var(--purple); bottom: -100px; left: -100px; }
+  .card {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 24px;
+    padding: 2.2rem 2rem;
+    text-align: center;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  }
+  .logo { width: 72px; height: 72px; border-radius: 20px; margin: 0 auto 1rem;
+    box-shadow: 0 0 36px rgba(0, 238, 255, 0.35); }
+  h1 { font-size: 1.35rem; font-weight: 900; margin-bottom: .3rem;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .sub { color: var(--muted); font-size: .9rem; margin-bottom: 1.6rem; }
+  .server-btn {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    font-family: inherit;
+    text-align: right;
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 16px;
+    padding: 1rem 1.2rem;
+    margin-bottom: .9rem;
+    cursor: pointer;
+    transition: transform .18s, border-color .18s, box-shadow .18s;
+  }
+  .server-btn:hover { transform: translateY(-2px); border-color: var(--cyan); box-shadow: 0 10px 30px rgba(0,238,255,.15); }
+  .server-btn:disabled { opacity: .6; cursor: wait; transform: none; }
+  .server-btn .icon { font-size: 1.7rem; }
+  .server-btn .info { flex: 1; }
+  .server-btn .name { font-weight: 800; font-size: 1.02rem; }
+  .server-btn .host { color: var(--muted); font-size: .8rem; direction: ltr; }
+  .server-btn.beta:hover { border-color: var(--orange); box-shadow: 0 10px 30px rgba(255,107,26,.18); }
+  .badge {
+    font-size: .7rem; font-weight: 700;
+    background: rgba(0, 255, 178, 0.12); color: var(--green);
+    border: 1px solid rgba(0, 255, 178, 0.3);
+    padding: .15rem .7rem; border-radius: 999px; white-space: nowrap;
+  }
+  .badge.beta { background: rgba(255, 107, 26, 0.12); color: var(--orange); border-color: rgba(255, 107, 26, 0.35); }
+  .dont-show { display: flex; align-items: center; justify-content: center; gap: .6rem;
+    margin-top: 1.2rem; color: var(--muted); font-size: .88rem; cursor: pointer; user-select: none; }
+  .dont-show input { width: 17px; height: 17px; accent-color: var(--cyan); cursor: pointer; }
+  /* العرض البرمجي (sw=1): إطفاء الفلاتر الثقيلة التي قد تُرسم سوداء في SwiftShader */
+  .no-fx .glow { display: none; }
+  .no-fx body::before, body.no-fx::before { display: none; }
+  .no-fx .card { backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .no-fx .server-btn:hover { transform: none; }
+</style>
+<div id="el-lang" style="position:fixed;top:14px;inset-inline-end:14px;z-index:50;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:6px 10px;backdrop-filter:blur(10px)"><span style="font-size:16px">🌐</span><select class="foxy-lang-select" aria-label="Language" style="background:transparent;color:#fff;border:none;font-weight:700;font-size:13px;cursor:pointer;outline:none"></select></div><style>#el-lang select option{color:#111}html[dir="ltr"] body{direction:ltr !important;text-align:left !important}</style><script src="../assets/js/i18n.js"></script></head>
+<body>
+  <div class="glow cyan"></div>
+  <div class="glow purple"></div>
+
+  <div class="card">
+    <img class="logo" src="../assets/img/foxy.png" alt="Foxy" onerror="this.style.display='none'">
+    <h1 data-i18n="electron.select_h1">أهلاً بك في Foxy 🦊</h1>
+    <p class="sub" data-i18n="electron.select_sub">اختر السيرفر الذي تريد الاتصال به</p>
+
+    <button class="server-btn" id="btnStable">
+      <span class="icon">🚀</span>
+      <span class="info">
+        <div class="name" data-i18n="electron.select_stable">النسخة المستقرة</div>
+        <div class="host">foxy.xo.je</div>
+      </span>
+      <span class="badge" data-i18n="electron.select_rec">موصى بها</span>
+    </button>
+
+    <button class="server-btn beta" id="btnBeta">
+      <span class="icon">🧪</span>
+      <span class="info">
+        <div class="name" data-i18n="electron.select_beta">النسخة التجريبية</div>
+        <div class="host">abdo3.xo.je</div>
+      </span>
+      <span class="badge beta">Beta</span>
+    </button>
+
+    <label class="dont-show">
+      <input type="checkbox" id="dontShow">
+      <span data-i18n="electron.select_remember">عدم الإظهار مجدداً (تذكر اختياري)</span>
+    </label>
+  </div>
+
+<script>
+  try { if (new URLSearchParams(location.search).get('sw') === '1') document.body.classList.add('no-fx'); } catch (e) {}
+  (async function init() {
+    try {
+      if (window.electronAPI && window.electronAPI.getServers) {
+        const cfg = await window.electronAPI.getServers();
+        if (cfg && cfg.dontShowServerSelector) {
+          document.getElementById('dontShow').checked = true;
+        }
+      }
+    } catch {}
+  })();
+
+  async function choose(server) {
+    const dontShow = document.getElementById('dontShow').checked;
+    document.getElementById('btnStable').disabled = true;
+    document.getElementById('btnBeta').disabled = true;
+    try {
+      if (window.electronAPI && window.electronAPI.chooseServer) {
+        await window.electronAPI.chooseServer({ server, dontShow });
+      } else {
+        const urls = { stable: 'https://foxy.xo.je/login.html', beta: 'https://abdo3.xo.je/login.html' };
+        window.location.href = urls[server] || urls.stable;
+      }
+    } catch {
+      document.getElementById('btnStable').disabled = false;
+      document.getElementById('btnBeta').disabled = false;
+    }
+  }
+
+  document.getElementById('btnStable').addEventListener('click', () => choose('stable'));
+  document.getElementById('btnBeta').addEventListener('click', () => choose('beta'));
+</script>
+</body>
+</html>

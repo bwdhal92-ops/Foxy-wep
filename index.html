@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="landing.meta_title">Foxy — دردشة صوتية ومجتمعات</title>
+<meta name="description" data-i18n-content="landing.meta_desc" content="فوكسي — غرف صوتية بجودة عالية، تأخير منخفض، ومجتمعات عربية نابضة. ادخل غرفة وجرب الآن مجاناً من المتصفح.">
+<link rel="icon" type="image/png" href="assets/img/foxy.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="assets/js/i18n.js"></script>
+<style>
+:root{
+  --bg:#070b16; --bg2:#0b1120; --card:#111a2e; --line:rgba(255,255,255,.08);
+  --cyan:#00e5ff; --purple:#7c3aed; --green:#22c55e; --red:#ef4444;
+  --text:#f1f5f9; --muted:#94a3b8; --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+
+/* top live bar */
+.topbar{background:linear-gradient(90deg,#0b1120,#111a2e);border-bottom:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+.topbar .wrap{display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.5rem 20px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px rgba(239,68,68,.15);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.4}}
+.topbar b{color:var(--text)}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:100;background:rgba(7,11,22,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:.65rem;font-weight:900;font-size:1.3rem}
+.logo img{width:38px;height:38px;border-radius:11px}
+.logo small{display:block;font-size:.7rem;color:var(--muted);font-weight:600;line-height:1}
+.links{display:flex;gap:1.8rem;list-style:none;font-weight:700;font-size:.95rem;color:var(--muted)}
+.links a:hover{color:var(--cyan)}
+.nav-cta{display:flex;gap:.7rem;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border-radius:12px;padding:.7rem 1.5rem;font-weight:800;font-family:inherit;cursor:pointer;border:1px solid transparent;font-size:.95rem;transition:.2s}
+.btn-ghost{color:var(--text);border-color:var(--line);background:rgba(255,255,255,.03)}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-primary{background:linear-gradient(135deg,var(--cyan),#0aa8ff 55%,var(--purple));color:#04121a;border:none}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,229,255,.25)}
+.menu-btn{display:none;background:none;border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:1.3rem;width:44px;height:44px;cursor:pointer}
+
+/* hero */
+.hero{position:relative;padding:64px 0 40px;background:radial-gradient(600px 300px at 80% 10%,rgba(0,229,255,.08),transparent),radial-gradient(600px 300px at 20% 90%,rgba(124,58,237,.1),transparent),var(--bg)}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#86efac;font-size:.85rem;font-weight:700;padding:.4rem 1rem;border-radius:100px;margin-bottom:1.2rem}
+.hero h1{font-size:clamp(2rem,4.5vw,3.4rem);font-weight:900;line-height:1.25;margin-bottom:1rem}
+.hero h1 span{color:var(--cyan)}
+.hero>p{color:var(--muted);font-size:1.08rem;max-width:520px;margin-bottom:1.8rem}
+.hero-btns{display:flex;gap:.9rem;flex-wrap:wrap;margin-bottom:1.8rem}
+.trust{display:flex;align-items:center;gap:.9rem;color:var(--muted);font-size:.9rem}
+.avatars{display:flex}
+.avatars span{width:36px;height:36px;border-radius:50%;border:2px solid var(--bg);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;margin-inline-start:-10px}
+.avatars span:first-child{margin-inline-start:0}
+
+/* voice mockup — the part that makes it feel like voice chat */
+.room{background:var(--bg2);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.room-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);background:#0d1528}
+.room-head .t{display:flex;align-items:center;gap:.6rem;font-weight:800}
+.room-head .t i{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
+.ping{font-size:.8rem;color:var(--green);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);padding:.15rem .7rem;border-radius:100px;font-weight:700}
+.voice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:18px}
+.user{background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:16px 8px;text-align:center;transition:.3s;position:relative}
+.user.speaking{border-color:var(--green);box-shadow:0 0 0 3px rgba(34,197,94,.15)}
+.user .av{width:52px;height:52px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.2rem;color:#fff}
+.user .nm{font-size:.85rem;font-weight:700}
+.user .st{font-size:.72rem;color:var(--muted)}
+.user.speaking .st{color:var(--green)}
+.eq{display:flex;gap:2px;justify-content:center;height:14px;margin-top:6px;opacity:0}
+.user.speaking .eq{opacity:1}
+.eq i{width:3px;background:var(--green);border-radius:2px;animation:eq .7s infinite alternate}
+.eq i:nth-child(2){animation-delay:.15s}.eq i:nth-child(3){animation-delay:.3s}.eq i:nth-child(4){animation-delay:.45s}
+@keyframes eq{from{height:4px}to{height:14px}}
+.room-controls{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-top:1px solid var(--line);background:#0d1528}
+.ctl{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ctl.leave{background:var(--red);border-color:var(--red);width:auto;padding:0 22px;border-radius:12px;font-weight:800;font-size:.9rem;font-family:inherit}
+
+/* live rooms */
+.section{padding:72px 0}
+.sec-head{text-align:center;max-width:640px;margin:0 auto 40px}
+.sec-head .kicker{display:inline-block;font-size:.78rem;font-weight:800;letter-spacing:1px;color:var(--cyan);background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.2);padding:.3rem 1rem;border-radius:100px;margin-bottom:1rem}
+.sec-head h2{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:900;margin-bottom:.6rem}
+.sec-head p{color:var(--muted)}
+.rooms{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.room-card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:22px;transition:.25s}
+.room-card:hover{border-color:rgba(0,229,255,.3);transform:translateY(-4px)}
+.room-card .cat{font-size:.75rem;font-weight:800;color:var(--cyan);background:rgba(0,229,255,.08);padding:.2rem .7rem;border-radius:100px;display:inline-block;margin-bottom:.8rem}
+.room-card h3{font-size:1.15rem;margin-bottom:.3rem}
+.room-card .meta{color:var(--muted);font-size:.88rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.join{width:100%;background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.25);color:var(--cyan);padding:.65rem;border-radius:12px;font-weight:800;font-family:inherit;cursor:pointer;transition:.2s}
+.join:hover{background:var(--cyan);color:#04121a}
+
+/* stats */
+.stats{background:var(--bg2);border-block:1px solid var(--line)}
+.stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding-top:36px;padding-bottom:36px;text-align:center}
+.stat b{font-size:1.9rem;font-weight:900;display:block}
+.stat span{color:var(--muted);font-size:.9rem}
+
+/* features */
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.feat{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;transition:.25s}
+.feat:hover{border-color:rgba(0,229,255,.25)}
+.feat .ic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:1.1rem;background:rgba(0,229,255,.08);border:1px solid rgba(0,229,255,.15)}
+.feat h3{margin-bottom:.5rem;font-size:1.1rem}
+.feat p{color:var(--muted);font-size:.93rem}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;counter-reset:step}
+.step{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;position:relative}
+.step::before{counter-increment:step;content:counter(step);position:absolute;top:20px;left:20px;width:32px;height:32px;border-radius:50%;background:rgba(124,58,237,.15);border:1px solid rgba(124,58,237,.3);color:#c4b5fd;font-weight:900;display:flex;align-items:center;justify-content:center}
+.step h3{margin-bottom:.4rem}
+.step p{color:var(--muted);font-size:.93rem}
+
+/* showcase */
+.show{background:var(--bg2);border:1px solid var(--line);border-radius:24px;padding:32px;display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center;margin-bottom:22px}
+.show img{border-radius:14px;border:1px solid var(--line);width:100%}
+.show h3{font-size:1.5rem;margin:.7rem 0 .6rem}
+.show p{color:var(--muted);margin-bottom:1.2rem}
+.check{list-style:none;display:grid;gap:.55rem;color:#cbd5e1;font-size:.93rem}
+.check li::before{content:"✓";color:var(--green);font-weight:900;margin-inline-end:.6rem}
+
+/* testimonials */
+.tests{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.test{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+.test p{font-size:.94rem;color:#cbd5e1;margin-bottom:1rem}
+.test .who{display:flex;align-items:center;gap:.7rem}
+.test .who i{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-style:normal}
+.test .who b{display:block;font-size:.9rem}
+.test .who span{font-size:.8rem;color:var(--muted)}
+
+/* cta + footer */
+.cta{background:linear-gradient(180deg,var(--bg),#0d1528);text-align:center;padding:80px 20px;border-top:1px solid var(--line)}
+.cta h2{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;margin-bottom:.8rem}
+.cta p{color:var(--muted);margin-bottom:2rem}
+footer{background:#04070f;border-top:1px solid var(--line);padding:48px 0 24px}
+.foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:30px;margin-bottom:32px}
+.foot-grid h4{font-size:.9rem;margin-bottom:1rem;color:var(--text)}
+.foot-grid ul{list-style:none;display:grid;gap:.55rem;color:var(--muted);font-size:.9rem}
+.foot-grid ul a:hover{color:var(--cyan)}
+.foot-bottom{border-top:1px solid var(--line);padding-top:20px;display:flex;justify-content:space-between;color:var(--muted);font-size:.85rem;flex-wrap:wrap;gap:10px}
+
+.reveal{opacity:0;transform:translateY(22px);transition:.6s}
+.reveal.visible{opacity:1;transform:none}
+.skel{display:inline-block;min-width:34px;height:1em;border-radius:6px;background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(255,255,255,.16),rgba(255,255,255,.08));background-size:200% 100%;animation:sk 1.2s infinite;vertical-align:middle}
+@keyframes sk{to{background-position:-200% 0}}
+.empty{background:var(--bg2);border:1px dashed var(--line);border-radius:var(--radius);padding:36px 24px;text-align:center;color:var(--muted)}
+.empty b{color:var(--text);display:block;font-size:1.1rem;margin-bottom:.4rem}
+.updated{font-size:.78rem;color:var(--muted);text-align:center;margin-top:1rem}
+/* server cards */
+.srv-top{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem}
+.srv-av{width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.5rem;color:#fff;flex-shrink:0}
+.srv-top h3{font-size:1.12rem;margin:0}
+.srv-top .sub{font-size:.78rem;color:var(--muted)}
+.mstack{display:flex;align-items:center;margin:.4rem 0 1rem}
+.mstack img,.mstack .mp{width:34px;height:34px;border-radius:50%;border:2px solid var(--bg2);object-fit:cover;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:#fff;margin-inline-start:-10px;background:#334155}
+/* الأفاتار الافتراضي: ثعلب أبيض على لون المستخدم المحفوظ */
+.mstack .mp{position:relative;overflow:hidden}
+.mstack .mp .mp-l{position:relative;z-index:0;line-height:1}
+.mstack .mp .mp-fox{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:1;margin:0;border:0;pointer-events:none}
+.mstack img:first-child,.mstack .mp:first-child{margin-inline-start:0}
+.mstack .more{background:#1e293b;color:var(--muted);font-size:.72rem}
+.live-strip{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.4rem}
+.live-chip{display:inline-flex;align-items:center;gap:.45rem;font-size:.82rem;font-weight:700;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:.35rem .9rem;border-radius:100px}
+.rank{position:absolute;top:14px;left:14px;font-size:.72rem;font-weight:800;color:#fbbf24;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);padding:.1rem .6rem;border-radius:100px}
+.room-card{position:relative}
+
+@media(max-width:960px){
+  .hero-grid,.show{grid-template-columns:1fr}
+  .rooms,.features,.steps,.tests{grid-template-columns:1fr 1fr}
+  .stats .wrap{grid-template-columns:1fr 1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .links,.nav-cta .btn-ghost{display:none}
+  .menu-btn{display:flex;align-items:center;justify-content:center}
+  .links.open{display:flex;flex-direction:column;position:absolute;top:68px;right:0;left:0;background:#0b1120;padding:20px;border-bottom:1px solid var(--line);gap:1rem}
+}
+@media(max-width:600px){
+  .rooms,.features,.steps,.tests{grid-template-columns:1fr}
+  .voice-grid{grid-template-columns:repeat(3,1fr);gap:8px;padding:12px}
+  .hero{padding-top:40px}
+  .nav-cta .btn-primary{padding:.6rem 1.1rem;font-size:.85rem}
+}
+/* language dropdown */
+.lang-wrap{position:relative}
+.lang-btn{display:inline-flex;align-items:center;gap:.45rem;border-radius:12px;padding:.7rem 1rem;font-weight:800;font-family:inherit;cursor:pointer;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--text);font-size:.9rem;transition:.2s}
+.lang-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.lang-menu{position:absolute;top:calc(100% + 8px);inset-inline-end:0;min-width:190px;background:#0d1528;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.5);display:none;z-index:200}
+.lang-menu.open{display:block}
+.lang-menu button{display:flex;align-items:center;gap:.6rem;width:100%;text-align:start;background:none;border:none;color:var(--text);padding:.65rem 1rem;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer}
+.lang-menu button:hover{background:rgba(0,229,255,.08)}
+.lang-menu button.active{color:var(--cyan)}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap"><span class="live-dot"></span><span id="topbarText"><span class="skel">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span data-i18n="landing.topbar_loading"> جاري تحميل بيانات فوكسي...</span></span></div>
+</div>
+
+<nav class="nav">
+  <div class="wrap">
+    <a href="/" class="logo">
+      <img src="assets/img/foxy.png" alt="Foxy" onerror="this.src='https://placehold.co/80x80/00e5ff/000?text=F'">
+      <span>FOXY<small data-i18n="landing.logo_sub">غرف صوتية عربية</small></span>
+    </a>
+    <ul class="links" id="navLinks">
+      <li><a href="#live" data-i18n="landing.nav_communities">المجتمعات</a></li>
+      <li><a href="#features" data-i18n="landing.nav_features">المميزات</a></li>
+      <li><a href="#how" data-i18n="landing.nav_how">كيف تبدأ</a></li>
+      <li><a href="#showcase" data-i18n="landing.nav_tour">جولة</a></li>
+    </ul>
+    <div class="nav-cta">
+      <div class="lang-wrap">
+        <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false"><span id="foxy-lang-current">🌐</span><span style="opacity:.6">▾</span></button>
+        <div class="lang-menu" id="langMenu" role="menu"></div>
+      </div>
+      <a href="login.html" class="btn btn-ghost" data-i18n="landing.nav_login">دخول</a>
+      <a href="login.html" class="btn btn-primary" data-i18n="landing.nav_start">ابدأ مجاناً</a>
+      <button class="menu-btn" id="menuBtn" aria-label="القائمة" data-i18n-aria="navbar.menu_label">☰</button>
+    </div>
+  </div>
+  <ul class="links" id="mobileLinks" style="display:none"></ul>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="badge"><span class="live-dot"></span> <span id="heroStatus" data-i18n="landing.load_hero_status">جاري قراءة بيانات فوكسي...</span></div>
+      <h1><span data-i18n="landing.hero_title_a">مجتمعات عربية</span> <span data-i18n="landing.hero_title_span" style="color:var(--cyan)">بغرف صوتية</span> <span data-i18n="landing.hero_title_b">بدون تحميل</span></h1>
+      <p data-i18n="landing.hero_sub">فوكسي سيرفرات عربية بغرف صوتية وكتابية. اختار مجتمع من القائمة تحت، وادخل من المتصفح مباشرة.</p>
+      <div class="hero-btns">
+        <a href="#live" class="btn btn-primary"><span data-i18n="landing.hero_discover">🎧 اكتشف المجتمعات</span> (<span id="heroLiveCount">...</span>)</a>
+        <a href="login.html" class="btn btn-ghost" data-i18n="landing.hero_open_browser">افتح عبر المتصفح ←</a>
+      </div>
+      <div class="trust">
+        <div class="avatars" id="heroAvatars">
+          <span style="background:#334155">...</span>
+        </div>
+        <span id="heroTrust" data-i18n="landing.load_trust">جاري تحميل بيانات المجتمعات...</span>
+      </div>
+    </div>
+
+    <div class="room" aria-label="أكبر مجتمع على فوكسي" data-i18n-aria="landing.load_room_aria">
+      <div class="room-head">
+        <div class="t"><i id="heroRoomDot" style="background:#64748b;box-shadow:none"></i> <span id="heroRoomTitle" data-i18n="landing.load_room_title">جاري تحميل المجتمعات...</span></div>
+        <div class="ping" id="heroPing">ping: ...</div>
+      </div>
+      <div class="voice-grid" id="voiceGrid">
+        <div class="user"><div class="av" style="background:#334155">…</div><div class="nm" data-i18n="app_profile.uploading">جاري التحميل</div><div class="st" data-i18n="landing.load_user_sub">نقرأ بيانات السيرفر</div><div class="eq"><i></i><i></i><i></i><i></i></div></div>
+      </div>
+      <div class="room-controls">
+        <button class="ctl leave" onclick="location.href='login.html'" id="heroJoinBtn" data-i18n="landing.hero_join_btn">ادخل من التطبيق</button>
+      </div>
+      <div style="padding:8px 16px 14px;text-align:center;font-size:.75rem;color:var(--muted)" id="heroRoomNote" data-i18n="landing.hero_note">أكبر سيرفر على فوكسي — البيانات من قاعدة البيانات مباشرة</div>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="live" style="padding-top:40px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker" data-i18n="landing.live_kicker">من قاعدة البيانات</span>
+      <h2 data-i18n="landing.live_title">مجتمعات فوكسي — مرتبة بالأعضاء</h2>
+      <p data-i18n="landing.live_sub">السيرفرات المتسجلة على فوكسي ببياناتها الحقيقية: الأعضاء والقنوات. الشارة الحمراء تعني أن هناك من يتكلم في غرفة صوتية الآن.</p>
+    </div>
+    <div class="live-strip" id="liveStrip" style="display:none"></div>
+    <div class="rooms" id="liveRooms">
+      <div class="room-card"><span class="cat" data-i18n="landing.load_card_t">... جاري التحميل</span><h3><span class="skel" data-i18n="landing.load_card_h">جاري قراءة المجتمعات</span></h3><div class="meta" data-i18n="landing.load_card_m">نتصل بقاعدة البيانات...</div></div>
+    </div>
+    <div class="updated" id="liveUpdated"></div>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="wrap">
+    <div class="stat reveal"><b id="statServers">—</b><span data-i18n="landing.stat_servers">سيرفر مسجل</span></div>
+    <div class="stat reveal"><b id="statMembers">—</b><span data-i18n="landing.stat_members">عضو في المجتمعات</span></div>
+    <div class="stat reveal"><b id="statChannels">—</b><span data-i18n="landing.stat_channels">قناة صوتية وكتابية</span></div>
+    <div class="stat reveal"><b id="statPing">—</b><span data-i18n="landing.stat_ping">البينج من جهازك للسيرفر (حي)</span></div>
+  </div>
+</div>
+
+<section class="section" id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="kicker" data-i18n="landing.feat_kicker">المميزات</span>
+      <h2 data-i18n="landing.feat_title">إيه اللي يعمله فوكسي؟</h2>
+      <p data-i18n="landing.feat_sub">غرف صوتية وكتابية وسيرفرات — جرب بنفسك من المتصفح.</p>
+    </div>
+    <div class="features">
+      <div class="feat reveal">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg></div>
+        <h3 data-i18n="landing.feat1_t">غرف صوتية بتقنية WebRTC</h3><p data-i18n="landing.feat1_d">صوت مباشر بين الأعضاء، كتم/إلغاء كتم، ومشاركة شاشة. البينج الحقيقي ظاهر فوق وبيتقاس من جهازك.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3 data-i18n="landing.feat2_t">شات منظم لكل غرفة</h3><p data-i18n="landing.feat2_d">كل غرفة صوتية معاها شات خاص، صور وملصقات وردود، بدون لخبطة.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h3 data-i18n="landing.feat3_t">مشاركة شاشة من المتصفح</h3><p data-i18n="landing.feat3_d">شارك لعبك أو شرحك مع الغرفة بضغطة واحدة، من المتصفح أو الموبايل.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3 data-i18n="landing.feat4_t">إشراف عربي سهل</h3><p data-i18n="landing.feat4_d">كتم، طرد، أدوار، وغرف خاصة. لوحة تحكم بالعربي للمشرفين.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg></div>
+        <h3 data-i18n="landing.feat5_t">شغال على أي جهاز</h3><p data-i18n="landing.feat5_d">متصفح، أندرويد، iOS، وكمبيوتر. ادخل من أي حتة وتكمل من مكان ما وقفت.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 1-.1 1.2l2 1.6-2 3.4-2.4-1a7 7 0 0 1-2 1.2L14 20h-4l-.5-2.6a7 7 0 0 1-2-1.2l-2.4 1-2-3.4 2-1.6A7 7 0 0 1 5 12a7 7 0 0 1 .1-1.2l-2-1.6 2-3.4 2.4 1a7 7 0 0 1 2-1.2L10 4h4l.5 2.6a7 7 0 0 1 2 1.2l2.4-1 2 3.4-2 1.6c.06.4.1.8.1 1.2z"/></svg></div>
+        <h3 data-i18n="landing.feat6_t">بوتات ومسابقات</h3><p data-i18n="landing.feat6_d">بوت ترحيب، نقاط، ومسابقات يومية تشغل الغرفة وتزود التفاعل.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="how" style="background:var(--bg2);border-block:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="kicker" data-i18n="landing.how_kicker">3 خطوات بس</span><h2 data-i18n="landing.how_title">ادخل في أقل من دقيقة</h2></div>
+    <div class="steps">
+      <div class="step reveal"><h3 data-i18n="landing.step1_t">1. اختار مجتمع</h3><p data-i18n="landing.step1_d">تصفح السيرفرات فوق وادخل اللي يعجبك — أو أنشئ سيرفرك الخاص مجاناً.</p></div>
+      <div class="step reveal"><h3 data-i18n="landing.step2_t">2. دوس انضم</h3><p data-i18n="landing.step2_d">من المتصفح مباشرة بدون تحميل. لو حابب، سجل في 10 ثواني.</p></div>
+      <div class="step reveal"><h3 data-i18n="landing.step3_t">3. افتح المايك واتكلم</h3><p data-i18n="landing.step3_d">هتسمع الناس فوراً. اعمل غرفتك الخاصة وادعُ صحابك بلينك.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="showcase">
+  <div class="wrap">
+    <div class="sec-head reveal"><span class="kicker" data-i18n="landing.show_kicker">جولة سريعة</span><h2 data-i18n="landing.show_title">شكل فوكسي من جوه</h2></div>
+    <div class="show reveal">
+      <img src="assets/img/screenshot1.webp" width="800" height="1554" data-i18n-aria="landing.show1_t" alt="قنوات فوكسي" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/600x400/0b1120/00e5ff?text=Foxy+Channels'">
+      <div><span class="kicker" data-i18n="landing.show1_k">تنظيم</span><h3 data-i18n="landing.show1_t">سيرفرك متقسم صح</h3><p data-i18n="landing.show1_d">رومات ترحيب، صوتية، ونقاش. صلاحيات واضحة وبوتات بتساعدك.</p>
+        <ul class="check"><li data-i18n="landing.show1_li1">أدوار وصلاحيات بالعربي</li><li data-i18n="landing.show1_li2">غرف خاصة بكلمة سر</li><li data-i18n="landing.show1_li3">سجل كامل للإشراف</li></ul>
+      </div>
+    </div>
+    <div class="show reveal">
+      <div><span class="kicker" data-i18n="landing.show2_k">صوت وفيديو</span><h3 data-i18n="landing.show2_t">غرف صوت وفيديو من التطبيق</h3><p data-i18n="landing.show2_d">ادخل من صفحة الدخول وشوف الغرف والقنوات الحقيقية — نفس البيانات اللي ظاهرة فوق.</p>
+        <ul class="check"><li data-i18n="landing.show2_li1">حضور حي من قاعدة البيانات</li><li data-i18n="landing.show2_li2">مشاركة شاشة من المتصفح</li><li data-i18n="landing.show2_li3">قنوات صوتية وكتابية لكل سيرفر</li></ul>
+      </div>
+      <img src="assets/img/screenshot2.webp" width="800" height="460" data-i18n-aria="landing.show2_t" alt="غرف الصوت" loading="lazy" decoding="async" onerror="this.src='https://placehold.co/600x400/0b1120/7c3aed?text=Foxy+Voice'">
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 data-i18n="landing.cta_title">جاهز تنضم لأول مجتمع؟</h2>
+  <p data-i18n="landing.cta_sub">مجاني تماماً. ادخل من المتصفح دلوقتي — أو أنشئ سيرفرك الخاص وادعُ صحابك.</p>
+  <div class="hero-btns" style="justify-content:center">
+    <a href="login.html" class="btn btn-primary" style="padding:1rem 2.4rem;font-size:1.05rem" data-i18n="landing.cta_primary">🎧 ادخل التطبيق الآن</a>
+    <a href="#live" class="btn btn-ghost" style="padding:1rem 2rem" data-i18n="landing.cta_secondary">شوف المجتمعات</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="/" class="logo" style="margin-bottom:1rem"><img src="assets/img/foxy.png" alt="Foxy" onerror="this.src='https://placehold.co/80x80/00e5ff/000?text=F'"><span>FOXY</span></a>
+        <p style="color:var(--muted);font-size:.9rem;max-width:280px" data-i18n="landing.foot_desc">منصة غرف صوتية عربية. صوت نقي، مجتمعات حية، ودخول فوري من المتصفح.</p>
+      </div>
+      <div><h4 data-i18n="landing.foot_product">المنتج</h4><ul><li><a href="#live" data-i18n="landing.foot_communities">المجتمعات</a></li><li><a href="#features" data-i18n="landing.foot_features">المميزات</a></li><li><a href="login.html" data-i18n="landing.foot_download">تحميل التطبيق</a></li><li><a href="login.html" data-i18n="landing.foot_browser">نسخة المتصفح</a></li></ul></div>
+      <div><h4 data-i18n="landing.foot_community">المجتمع</h4><ul><li><a href="#" data-i18n="landing.foot_public">سيرفرات عامة</a></li><li><a href="#" data-i18n="landing.foot_events">المسابقات</a></li><li><a href="#" data-i18n="landing.foot_blog">المدونة</a></li><li><a href="#" data-i18n="landing.foot_support">الدعم</a></li></ul></div>
+      <div><h4 data-i18n="landing.foot_legal">قانوني</h4><ul><li><a href="#" data-i18n="landing.foot_privacy">الخصوصية</a></li><li><a href="#" data-i18n="landing.foot_terms">الشروط</a></li><li><a href="#" data-i18n="landing.foot_guidelines">إرشادات المجتمع</a></li></ul></div>
+    </div>
+    <div class="foot-bottom"><span data-i18n="landing.foot_rights">© 2026 Foxy App. جميع الحقوق محفوظة.</span><span data-i18n="landing.foot_made">صُنع بحب للمجتمع العربي 🎧</span></div>
+  </div>
+</footer>
+
+<script>
+const menuBtn=document.getElementById('menuBtn'),navLinks=document.getElementById('navLinks');
+if(menuBtn&&navLinks){
+menuBtn.addEventListener('click',()=>{navLinks.classList.toggle('open');});
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+(function(){
+  const btn=document.getElementById('langBtn'),menu=document.getElementById('langMenu');
+  if(!btn||!menu)return;
+  function render(){
+    const api=window.foxyI18n; if(!api||!api.getSupported)return;
+    const sup=api.getSupported(), cur=api.getLang();
+    menu.innerHTML='';
+    Object.keys(sup).forEach(code=>{
+      const b=document.createElement('button');
+      b.type='button'; b.setAttribute('role','menuitem');
+      b.className=code===cur?'active':'';
+      b.textContent=sup[code].flag+'  '+sup[code].native;
+      b.onclick=()=>{api.setLang(code);menu.classList.remove('open');btn.setAttribute('aria-expanded','false');};
+      menu.appendChild(b);
+    });
+    const curEl=document.getElementById('foxy-lang-current');
+    if(curEl&&sup[cur])curEl.textContent=sup[cur].flag+' '+sup[cur].native;
+  }
+  btn.addEventListener('click',e=>{e.stopPropagation();menu.classList.toggle('open');btn.setAttribute('aria-expanded',menu.classList.contains('open'));});
+  document.addEventListener('click',e=>{if(!menu.contains(e.target)&&e.target!==btn&&!btn.contains(e.target))menu.classList.remove('open');});
+  document.addEventListener('languageChanged',render);
+  render(); setTimeout(render,500); setTimeout(render,1500);
+})();
+</script>
+<script type="module">
+/* مجتمعات حقيقية من Firestore + حضور حي من RTDB — لا أرقام ثابتة */
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getDatabase, ref, get, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+import { getFirestore, doc, getDoc, collection, getDocs, query, limit } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyDwddv_-qEU0_5ZLTZTWCgox7VVvtxZx68",authDomain:"discord-94524.firebaseapp.com",databaseURL:"https://discord-94524-default-rtdb.firebaseio.com",projectId:"discord-94524",storageBucket:"discord-94524.firebasestorage.app",messagingSenderId:"25789751728",appId:"1:25789751728:web:60d7e38a4b8fc4f1b77675"};
+const app=getApps().length?getApps()[0]:initializeApp(firebaseConfig);
+const rtdb=getDatabase(app);
+let fs=null; try{fs=getFirestore(app);}catch(e){console.warn("firestore unavailable",e);}
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const DYN={
+ar:{server:"سيرفر",member:"عضو",channel:"قناة",inVoice:"في الصوت الآن",biggest:"👑 الأكبر",joinViaApp:"ادخل عبر التطبيق ←",memberOf:"عضو في",liveNow:"في غرف صوتية الآن",person:"شخص",registered:"مسجل على فوكسي"},
+en:{server:"server",member:"member",channel:"channel",inVoice:"in voice now",biggest:"👑 Biggest",joinViaApp:"Join via app →",memberOf:"Member of",liveNow:"in voice rooms now",person:"online",registered:"registered on Foxy"},
+fr:{server:"serveur",member:"membre",channel:"salon",inVoice:"en vocal",biggest:"👑 Top",joinViaApp:"Rejoindre via l'app →",memberOf:"Membre de",liveNow:"en vocal actuellement",person:"en ligne",registered:"inscrits sur Foxy"},
+es:{server:"servidor",member:"miembro",channel:"canal",inVoice:"en voz ahora",biggest:"👑 Top",joinViaApp:"Unirse vía app →",memberOf:"Miembro de",liveNow:"en voz ahora",person:"en línea",registered:"registrados en Foxy"},
+de:{server:"Server",member:"Mitglied",channel:"Kanal",inVoice:"jetzt im Voice",biggest:"👑 Top",joinViaApp:"Über App beitreten →",memberOf:"Mitglied von",liveNow:"jetzt im Voice",person:"online",registered:"auf Foxy registriert"},
+tr:{server:"sunucu",member:"üye",channel:"kanal",inVoice:"seste şimdi",biggest:"👑 En büyük",joinViaApp:"Uygulamadan katıl →",memberOf:"üyesi",liveNow:"şu an seste",person:"çevrimiçi",registered:"Foxy'de kayıtlı"},
+ru:{server:"сервер",member:"участник",channel:"канал",inVoice:"сейчас в голосе",biggest:"👑 Топ",joinViaApp:"Войти из приложения →",memberOf:"Участник",liveNow:"сейчас в голосе",person:"онлайн",registered:"на Foxy"},
+pt:{server:"servidor",member:"membro",channel:"canal",inVoice:"em voz agora",biggest:"👑 Top",joinViaApp:"Entrar pelo app →",memberOf:"Membro de",liveNow:"em voz agora",person:"online",registered:"registrados no Foxy"}};
+const curL=()=> (window.foxyI18n?window.foxyI18n.getLang():'ar');
+const D=(k)=> (DYN[curL()]&&DYN[curL()][k])||DYN.ar[k]||k;
+const COLORS=["#0ea5e9","#7c3aed","#22c55e","#ef4444","#f59e0b","#ec4899"];
+const GRADS=[["#0ea5e9","#6366f1"],["#7c3aed","#ec4899"],["#22c55e","#0ea5e9"],["#f59e0b","#ef4444"],["#ec4899","#7c3aed"],["#14b8a6","#0ea5e9"]];
+const hash=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))>>>0;return h;};
+const colorFor=s=>COLORS[hash(s)%COLORS.length];
+const gradFor=s=>GRADS[hash(s)%GRADS.length];
+const firstLetter=n=>(String(n||"?").trim()[0]||"?").toUpperCase();
+const setText=(id,v)=>{const e=$(id);if(e)e.textContent=v;};
+
+let SERVERS=[];
+let voiceByServer={};
+let channelNames={};
+
+async function measurePing(){try{const t0=performance.now();await get(ref(rtdb,"/status"));return Math.round(performance.now()-t0);}catch(e){return null;}}
+
+const PCACHE={};
+async function userProfile(uid){
+  if(PCACHE[uid])return PCACHE[uid];
+  const fb={uid,name:"مستخدم "+String(uid).slice(0,5),photo:"",color:""};
+  if(!fs){PCACHE[uid]=fb;return fb;}
+  try{const s=await getDoc(doc(fs,"users",uid));
+    if(s.exists()){const d=s.data()||{};fb.name=d.displayName||fb.name;fb.photo=d.photoURL||"";fb.color=d.avatarColor||d.bannerColor||"";}}catch(e){}
+  PCACHE[uid]=fb;return fb;
+}
+
+const FOXY_MASK="assets/img/foxy-mask.png";
+function photoHTML(p,sizeClass){
+  const bg=p.color||colorFor(p.uid||p.name);
+  if(p.photo)return `<img src="${esc(p.photo)}" alt="${esc(p.name)}" loading="lazy" onerror="this.remove()"><span class="mp" style="display:none;background:${bg}">${esc(firstLetter(p.name))}</span>`;
+  return `<span class="mp" style="background:${bg}"><span class="mp-l" style="display:none">${esc(firstLetter(p.name))}</span><img class="mp-fox" src="${FOXY_MASK}" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none';var s=this.previousElementSibling;if(s)s.style.display=''"></span>`;
+}
+
+async function loadServers(){
+  const box=$("liveRooms");
+  if(!fs){box.innerHTML=`<div class="empty" style="grid-column:1/-1"><b>تعذر الاتصال بقاعدة البيانات</b>تحقق من اتصالك بالإنترنت وحاول مجدداً.</div>`;return;}
+  try{
+    const snap=await getDocs(query(collection(fs,"servers"),limit(12)));
+    if(snap.empty){
+      box.innerHTML=`<div class="empty" style="grid-column:1/-1"><b>كن أول مجتمع على فوكسي 🚀</b>لسه مفيش سيرفرات متسجلة — أنشئ سيرفرك مجاناً من التطبيق وادعُ صحابك، وهيظهر هنا تلقائياً.<br><br><button class="join" style="max-width:280px;margin:0 auto" onclick="location.href='login.html'">أنشئ سيرفرك مجاناً ←</button></div>`;
+      setText("liveUpdated","");setText("heroLiveCount","0");
+      setText("statServers","0");setText("statMembers","0");setText("statChannels","0");
+      return;
+    }
+    SERVERS=await Promise.all(snap.docs.map(async d=>{
+      const v=d.data()||{};
+      const members=Array.isArray(v.memberUids)?v.memberUids:[];
+      let chCount="—";
+      try{const ch=await getDocs(collection(fs,"servers",d.id,"channels"));
+        chCount=ch.docs.filter(c=>(c.data()||{}).type!=="category").length||ch.size||"—";}catch(e){}
+      return{id:d.id,name:v.name||("سيرفر "+d.id.slice(0,6)),members,chCount,live:0,liveRooms:[]};
+    }));
+    SERVERS.sort((a,b)=>b.members.length-a.members.length);
+    const totalMembers=SERVERS.reduce((n,s)=>n+s.members.length,0);
+    const totalCh=SERVERS.reduce((n,s)=>n+(typeof s.chCount==="number"?s.chCount:0),0);
+    setText("statServers",SERVERS.length);setText("statMembers",totalMembers);
+    setText("statChannels",totalCh||"—");setText("heroLiveCount",SERVERS.length);
+    refreshTopbarHero();
+    renderCards();renderHero();
+  }catch(e){
+    console.warn("servers read failed",e);
+    box.innerHTML=`<div class="empty" style="grid-column:1/-1"><b>عرض المجتمعات غير متاح للزوار حالياً</b>(${esc(e.code||"permission-denied")}) — ادخل التطبيق لرؤية سيرفراتك. ولو أنت المالك: اسمح بالقراءة العامة لمجموعة servers في Firestore Rules.</div>`;
+  }
+}
+
+function refreshTopbarHero(){
+  if(!SERVERS.length)return;
+  const totalMembers=SERVERS.reduce((n,s)=>n+s.members.length,0);
+  const total=Object.values(voiceByServer).reduce((n,v)=>n+v.count,0);
+  const tb=$("topbarText");
+  if(tb)tb.innerHTML=`<b>${SERVERS.length}</b> ${esc(D('server'))} • <b>${totalMembers}</b> ${esc(D('member'))} <span id="topLive">${total?` • 🔴 ${total} ${esc(D('liveNow'))}`:""}</span>`;
+  const hs=$("heroStatus");
+  if(hs)hs.textContent=total?`🔴 ${total} ${D('person')} ${D('liveNow')} • ${SERVERS.length} ${D('server')} ${D('registered')}`:`${SERVERS.length} ${D('server')} ${D('registered')}`;
+  const ht=$("heroTrust");
+  if(ht)ht.innerHTML=`<b style="color:#fff">${SERVERS.length}</b> • <b style="color:#fff">${totalMembers}</b> ${esc(D('member'))}`;
+}
+
+function renderCards(){
+  const box=$("liveRooms");if(!box||!SERVERS.length)return;
+  box.innerHTML=SERVERS.slice(0,6).map((s,i)=>{
+    const g=gradFor(s.id);
+    const liveBadge=s.live>0?`<span class="cat" style="color:#fca5a5;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3)">🔴 ${s.live} ${esc(D('inVoice'))}</span>`:`<span class="cat">${s.members.length} ${esc(D('member'))}</span>`;
+    const rank=i===0?`<span class="rank">${esc(D('biggest'))}</span>`:(i<3?`<span class="rank">#${i+1}</span>`:"");
+    return `<div class="room-card reveal visible" data-sid="${esc(s.id)}">${rank}
+      <div class="srv-top"><div class="srv-av" style="background:linear-gradient(135deg,${g[0]},${g[1]})">${esc(firstLetter(s.name))}</div>
+      <div><h3>${esc(s.name)}</h3><div class="sub">👥 ${s.members.length} ${esc(D('member'))} • 📺 ${s.chCount} ${esc(D('channel'))}</div></div></div>
+      <div class="mstack" id="ms-${esc(s.id)}"><span class="mp" style="background:#334155">...</span></div>
+      <div style="margin-bottom:1rem">${liveBadge}</div>
+      <button class="join" onclick="location.href='login.html'">${esc(D('joinViaApp'))}</button></div>`;
+  }).join("");
+  SERVERS.slice(0,6).forEach(async s=>{
+    const stack=document.getElementById("ms-"+s.id);if(!stack)return;
+    const profs=await Promise.all(s.members.slice(0,4).map(userProfile));
+    stack.innerHTML=profs.map(photoHTML).join("")+(s.members.length>4?`<span class="mp more">+${s.members.length-4}</span>`:"");
+  });
+}
+
+async function renderHero(){
+  if(!SERVERS.length)return;
+  const top=SERVERS[0];
+  const g=gradFor(top.id);
+  $("heroRoomTitle").textContent=`👑 ${top.name} — ${top.members.length} ${D('member')}`;
+  const note=$("heroRoomNote");
+  if(note&&!note.hasAttribute('data-i18n'))note.textContent=`${top.chCount} ${D('channel')}`;
+  const grid=$("voiceGrid");
+  const profs=await Promise.all(top.members.slice(0,6).map(userProfile));
+  if(!profs.length){grid.innerHTML=`<div class="user" style="grid-column:1/-1;padding:24px"><div class="nm">…</div></div>`;return;}
+  grid.innerHTML=profs.map(p=>`<div class="user"><div class="av" style="background:${p.photo?"#111a2e":colorFor(p.name)};overflow:hidden">${p.photo?`<img src="${esc(p.photo)}" alt="${esc(p.name)}" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.remove()">`:""}${p.photo?"":esc(firstLetter(p.name))}</div><div class="nm">${esc(p.name)}</div><div class="st">${esc(D('memberOf'))} ${esc(top.name)}</div><div class="eq"><i></i><i></i><i></i><i></i></div></div>`).join("");
+  $("heroAvatars").innerHTML=profs.slice(0,4).map(p=>p.photo?`<span style="padding:0;overflow:hidden"><img src="${esc(p.photo)}" alt="" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.parentElement.textContent='${esc(firstLetter(p.name))}'"></span>`:`<span style="background:${colorFor(p.name)}">${esc(firstLetter(p.name))}</span>`).join("");
+}
+
+function watchLive(){
+  onValue(ref(rtdb,"/voice_presence"),async snap=>{
+    const all=snap.val()||{};voiceByServer={};channelNames={};
+    for(const sid of Object.keys(all)){
+      if(sid==="dms")continue;
+      const chs=all[sid]||{};let count=0;const rooms=[];
+      for(const cid of Object.keys(chs||{})){
+        const uids=Object.keys(chs[cid]||{}).filter(u=>chs[cid][u]);
+        if(!uids.length)continue;count+=uids.length;rooms.push({cid,n:uids.length});
+      }
+      if(count)voiceByServer[sid]={count,rooms};
+    }
+    const total=Object.values(voiceByServer).reduce((n,v)=>n+v.count,0);
+    for(const sid of Object.keys(voiceByServer)){
+      for(const r of voiceByServer[sid].rooms){
+        const key=sid+"/"+r.cid;
+        if(!channelNames[key]){
+          try{if(!fs)throw 0;const s=await getDoc(doc(fs,"servers",sid,"channels",r.cid));
+            channelNames[key]=s.exists()?(s.data().name||"غرفة صوتية"):"غرفة صوتية";}catch(e){channelNames[key]="غرفة صوتية";}
+        }
+      }
+    }
+    const strip=$("liveStrip");
+    const entries=Object.entries(voiceByServer);
+    if(strip){
+      if(entries.length){
+        const sName=sid=>{const s=SERVERS.find(x=>x.id===sid);return s?s.name:("سيرفر "+String(sid).slice(0,6));};
+        strip.style.display="flex";
+        strip.innerHTML=entries.slice(0,6).map(([sid,v])=>v.rooms.slice(0,2).map(r=>`<span class="live-chip"><span class="live-dot"></span> ${esc(sName(sid))} — ${esc(channelNames[sid+"/"+r.cid])} (${r.n})</span>`).join("")).join("");
+      }else strip.style.display="none";
+    }
+    SERVERS.forEach(s=>{s.live=voiceByServer[s.id]?.count||0;});
+    if(SERVERS.length)renderCards();
+    if(SERVERS.length){
+      const liveTop=voiceByServer[SERVERS[0].id]?.count||0;
+      $("heroRoomDot").style.background=liveTop?"#22c55e":"#64748b";
+      $("heroRoomDot").style.boxShadow=liveTop?"0 0 10px #22c55e":"none";
+      refreshTopbarHero();
+    }
+    const tl=$("topLive");
+    if(tl&&!$("topbarText"))tl.textContent=total?` • 🔴 ${total} ${D('inVoice')}`:"";
+  });
+  measurePing().then(p=>{setText("statPing",p==null?"—":p+"ms");$("heroPing").textContent="ping: "+(p==null?"—":p+"ms");});
+  setInterval(async()=>{const p=await measurePing();if(p!=null){setText("statPing",p+"ms");$("heroPing").textContent="ping: "+p+"ms";}},20000);
+}
+
+await loadServers();
+watchLive();
+document.addEventListener('languageChanged',()=>{refreshTopbarHero();if(SERVERS.length){renderCards();}});
+</script>
+</body>
+</html>

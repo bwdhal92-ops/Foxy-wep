@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title data-i18n="electron.login_title">تسجيل الدخول إلى Foxy</title>
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            background: #1e293b;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 { margin-bottom: 0.5rem; font-size: 1.5rem; }
+        p { color: #94a3b8; margin-bottom: 2rem; }
+        .btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn:hover { background: #2563eb; transform: translateY(-2px); }
+        .btn.secondary { background: transparent; color: #93c5fd; border: 1px solid rgba(147,197,253,.35); font-size: .85rem; padding: .6rem 1.2rem; margin-top: .8rem; }
+        .btn.secondary:hover { background: rgba(59,130,246,.12); transform: translateY(-2px); }
+        .loading { display: none; margin-top: 1rem; color: #60a5fa; }
+    </style>
+<div id="el-lang" style="position:fixed;top:14px;inset-inline-end:14px;z-index:50;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:6px 10px;backdrop-filter:blur(10px)"><span style="font-size:16px">🌐</span><select class="foxy-lang-select" aria-label="Language" style="background:transparent;color:#fff;border:none;font-weight:700;font-size:13px;cursor:pointer;outline:none"></select></div><style>#el-lang select option{color:#111}html[dir="ltr"] body{direction:ltr !important;text-align:left !important}</style><script src="../assets/js/i18n.js"></script></head>
+<body>
+    <div class="container" id="main-container">
+        <h1 id="title" data-i18n="login_page.election_title">مرحباً بك في Foxy</h1>
+        <p id="desc" data-i18n="login_page.electron_desc">اضغط على الزر أدناه لإتمام تسجيل الدخول باستخدام جوجل.</p>
+        
+        <button id="login-btn" class="btn">
+            <svg style="width:20px; height:20px" viewBox="0 0 24 24">
+                <path fill="currentColor" d="M21.35,11.1H12.18V13.83H18.69C18.36,17.64 15.19,19.27 12.19,19.27C8.92,19.27 6.23,16.59 6.23,13.32C6.23,10.05 8.92,7.36 12.19,7.36C14.45,7.36 15.81,8.3 16.71,9.15L18.64,7.22C17.25,5.89 15.13,4.63 12.19,4.63C7.38,4.63 3.5,8.51 3.5,13.32C3.5,18.13 7.38,22 12.19,22C17.41,22 21.4,18.17 21.4,13.31C21.4,12.46 21.35,11.75 21.35,11.1V11.1Z" />
+            </svg>
+            <span data-i18n="login_page.electron_google_login">تسجيل الدخول باستخدام Google</span>
+        </button>
+
+        <button id="redirect-btn" class="btn secondary" style="display:none;">
+            <span data-i18n="electron.login_redirect">التحويل عبر الصفحة (لو لم تفتح نافذة جوجل)</span>
+        </button>
+
+        <div id="loading" class="loading" data-i18n="login_page.electron_loading">جاري معالجة الطلب...</div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+        const loginBtn = document.getElementById('login-btn');
+        const loading = document.getElementById('loading');
+        const desc = document.getElementById('desc');
+        const autostart = new URLSearchParams(location.search).get('autostart') !== '0';
+
+        function showLoading(text) {
+            loginBtn.style.display = 'none';
+            loading.style.display = 'block';
+            if (text) desc.textContent = text;
+        }
+        function showButton(text) {
+            loginBtn.style.display = 'inline-flex';
+            loading.style.display = 'none';
+            if (text) desc.textContent = text;
+        }
+        function finishWithResult(result) {
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const idToken = credential && credential.idToken;
+            const accessToken = (credential && credential.accessToken) || '';
+            if (!idToken) throw new Error(window.__fb('electron.login_token_fail', 'لم يصل توكن الدخول من جوجل'));
+            window.location.href = `/auth-completed?idToken=${encodeURIComponent(idToken)}&accessToken=${encodeURIComponent(accessToken)}`;
+        }
+
+        fetch('/config').then(r => {
+            if (!r.ok) throw new Error(window.__f('electron.login_cfg_fail', {n: r.status}, 'تعذّر تحميل إعدادات Firebase من التطبيق (HTTP ' + r.status + ')'));
+            return r.json();
+        }).then(async (firebaseConfig) => {
+            if (!firebaseConfig || !firebaseConfig.apiKey) throw new Error(window.__fb('electron.login_cfg_incomplete', 'إعدادات Firebase ناقصة (apiKey مفقود)'));
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+            const provider = new GoogleAuthProvider();
+
+            const redirectBtn = document.getElementById('redirect-btn');
+
+            async function popupLogin() {
+                showLoading(window.__fb('electron.login_popup', 'أكمل تسجيل الدخول في نافذة جوجل المنفصلة...'));
+                redirectBtn.style.display = 'none';
+                try {
+                    finishWithResult(await signInWithPopup(auth, provider));
+                } catch (error) {
+                    console.error(error);
+                    const code = error && error.code;
+                    if (code === 'auth/popup-closed-by-user') {
+                        showButton(window.__fb('electron.login_closed', 'أُغلقت نافذة جوجل — اضغط الزر للمحاولة مجدداً.'));
+                    } else if (code === 'auth/popup-blocked') {
+                        showButton(window.__fb('electron.login_blocked', 'منع المتصفح النافذة المنبثقة — اسمح بالنوافذ لهذا الموقع ثم اضغط الزر.'));
+                    } else {
+                        showButton(window.__fb('login_page.electron_error_retry', 'حدث خطأ، يرجى المحاولة مرة أخرى.'));
+                        alert(window.__f('electron.login_alert', {msg: error.message}, 'خطأ أثناء تسجيل الدخول: ' + error.message));
+                    }
+                    redirectBtn.style.display = 'inline-flex';
+                }
+            }
+            loginBtn.onclick = popupLogin;
+
+            redirectBtn.onclick = async () => {
+                showLoading(window.__fb('electron.login_redirecting', 'جارٍ تحويلك إلى جوجل...'));
+                try {
+                    await signInWithRedirect(auth, provider);
+                } catch (error) {
+                    console.error(error);
+                    showButton(window.__f('electron.login_redirect_fail', {msg: (error.message || error)}, 'تعذّر التحويل — حاول مجدداً. السبب: ' + (error.message || error)));
+                    redirectBtn.style.display = 'inline-flex';
+                }
+            };
+
+            try {
+                const redirectResult = await getRedirectResult(auth);
+                if (redirectResult) {
+                    finishWithResult(redirectResult);
+                    return;
+                }
+            } catch (e) { console.warn('[Login] getRedirectResult:', e); }
+
+            if (autostart) {
+                showLoading(window.__fb('electron.login_opening_tab', 'جارٍ فتح نافذة جوجل في تاب منفصل...'));
+                try {
+                    finishWithResult(await signInWithPopup(auth, provider));
+                    return;
+                } catch (e) {
+                    console.warn('[Login] auto popup:', e && e.code);
+                    redirectBtn.style.display = 'inline-flex';
+                    if (e && e.code === 'auth/popup-closed-by-user') showButton(window.__fb('electron.login_closed2', 'أُغلقت النافذة — اضغط الزر للمتابعة.'));
+                    else showButton(window.__fb('electron.login_tab', 'اضغط الزر لفتح نافذة جوجل في تاب منفصل.'));
+                }
+            } else {
+                redirectBtn.style.display = 'inline-flex';
+            }
+        }).catch(err => {
+            console.error(err);
+            desc.textContent = window.__f('electron.login_start_fail', {msg: (err.message || err)}, 'تعذّر بدء تسجيل الدخول: ' + (err.message || err));
+        });
+    </script>
+</body>
+</html>
