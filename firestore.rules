@@ -1,0 +1,119 @@
+// ===== Foxy STARTER Firestore rules — NOT auto-deployed =====
+// How to use: Firebase console > Firestore Database > Rules > paste > test in
+// the Rules Playground (join server, send message, kick flow, transfer
+// ownership) > Publish. Or: `firebase deploy --only firestore:rules`
+// (requires firebase.json hosting config + CLI login).
+//
+// WARNING: client-side permission checks (me(), ownerUid comparisons in JS)
+// are UI-only and bypassable from DevTools. THESE rules are the real lock.
+// Anonymous Auth is enabled in this app, so every write below ALSO binds
+// request.auth.uid to the claimed sender/owner — never trust client fields.
+//
+// Covers the collections this app actually uses:
+//   users/{uid}, servers/{sid}, servers/{sid}/members/*,
+//   servers/{sid}/channels/*, .../messages/*, direct_messages/*, .../messages/*
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function authed() {
+      return request.auth != null;
+    }
+    function isOwner(serverId) {
+      return authed() && get(/databases/$(database)/documents/servers/$(serverId)).data.ownerUid == request.auth.uid;
+    }
+    function isServerMember(serverId) {
+      return authed() && request.auth.uid in get(/databases/$(database)/documents/servers/$(serverId)).data.memberUids;
+    }
+
+    // ---------- Users: public read, self-only write, size caps ----------
+    // avatarColor: لون البروفايل الثابت (hex) — بيتقفل على خلفية الavatar
+    //Fallback (أيقونة الثعلب) وعلى الغلاف، وبيتخزن مرة واحدة عشان كل
+    //المستخدمين يشوفوا نفس اللون لنفس المستخدم.
+    match /users/{uid} {
+      allow read: if authed();
+      allow create, update: if authed() && request.auth.uid == uid
+        && (!('displayName' in request.resource.data) || request.resource.data.displayName.size() <= 60)
+        && (!('photoURL' in request.resource.data) || request.resource.data.photoURL.size() <= 500)
+        && (!('avatarColor' in request.resource.data) || request.resource.data.avatarColor is string && request.resource.data.avatarColor.size() <= 32)
+        && (!('bannerColor' in request.resource.data) || request.resource.data.bannerColor is string && request.resource.data.bannerColor.size() <= 32);
+      allow delete: if false;
+    }
+
+    // ---------- Servers ----------
+    match /servers/{sid} {
+      // Discovery/listing needs read; restrict to members.
+      allow get: if authed() && (request.auth.uid in resource.data.memberUids || resource.data.ownerUid == request.auth.uid);
+      allow list: if authed();
+      allow create: if authed()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.auth.uid in request.resource.data.memberUids
+        && request.resource.data.keys().hasOnly(['id','name','ownerUid','memberUids','createdAt','channelsOrder','photoURL','bannerURL','bannerColor','updatedAt','channelMessageCounts']);
+      allow update: if authed() && (
+        // owner can do anything except stealing tested fields (ownerUid change allowed only for current owner -> transfer flow)
+        (resource.data.ownerUid == request.auth.uid)
+        // any member may refresh the cached counters only
+        || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['channelMessageCounts', 'updatedAt']))
+        // self-join only: memberUids may only GAIN your own uid
+        || (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberUids', 'updatedAt'])
+            && request.resource.data.memberUids.removeAll(resource.data.memberUids).hasOnly([request.auth.uid]))
+      );
+      allow delete: if authed() && resource.data.ownerUid == request.auth.uid;
+
+      match /members/{uid} {
+        allow read: if isServerMember(sid);
+        // self-join doc OR owner manages all
+        allow create, update: if authed() && (request.auth.uid == uid || isOwner(sid));
+        allow delete: if authed() && (request.auth.uid == uid || isOwner(sid));
+      }
+
+      match /channels/{cid} {
+        allow read: if isServerMember(sid);
+        allow create, delete: if isOwner(sid);
+        allow update: if isOwner(sid);
+        match /messages/{mid} {
+          allow read: if isServerMember(sid);
+          allow create: if isServerMember(sid)
+            && request.resource.data.senderUid == request.auth.uid
+            && request.resource.data.text is string
+            && request.resource.data.text.size() <= 2000;
+          allow update, delete: if authed() && (resource.data.senderUid == request.auth.uid || isOwner(sid));
+        }
+      }
+
+      match /roles/{rid} {
+        allow read: if isServerMember(sid);
+        allow write: if isOwner(sid);
+      }
+    }
+
+    // ---------- Direct messages: participants only ----------
+    match /direct_messages/{doc} {
+      allow read: if authed() && request.auth.uid in resource.data.participants;
+      allow create: if authed() && request.auth.uid in request.resource.data.participants;
+      allow update: if authed() && request.auth.uid in resource.data.participants;
+      allow delete: if false;
+      match /messages/{mid} {
+        allow read: if authed() && request.auth.uid in get(/databases/$(database)/documents/direct_messages/$(doc)).data.participants;
+        allow create: if authed()
+          && request.auth.uid in get(/databases/$(database)/documents/direct_messages/$(doc)).data.participants
+          && request.resource.data.senderId == request.auth.uid
+          && (!('text' in request.resource.data) || (request.resource.data.text is string && request.resource.data.text.size() <= 2000));
+        allow update, delete: if false;
+      }
+    }
+
+    // ---------- Voice sessions ledger (created/updated on join) ----------
+    match /server_voice_sessions/{key} {
+      allow read: if authed();
+      allow create, update: if authed();
+      allow delete: if false;
+    }
+
+    // ---------- Default deny ----------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

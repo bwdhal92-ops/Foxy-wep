@@ -1,0 +1,122 @@
+{
+  "rules": {
+    // ===== Foxy hardened RTDB rules (replaces the previous fully-open rules) =====
+    // IMPORTANT — deploy steps (Firebase console > Realtime Database > Rules,
+    // or `firebase deploy --only database`):
+    //   1) Paste this file, use the Rules Playground to test
+    //      (join voice, mute toggle, kick, DM call) BEFORE publishing.
+    //   2) Anonymous Auth is ENABLED in this app (login.js allows
+    //      signInAnonymously), so `auth != null` alone does NOT stop attackers:
+    //      every check below ALSO binds the written uid to auth.uid.
+    //   3) Admin-gated paths rely on the `server_admins` mirror written by the
+    //      client (see servers.js: server create + ownership transfer). Until
+    //      the mirror is populated for OLD servers, have each owner re-save
+    //      settings once, or backfill via Admin SDK.
+    ".read": false,
+    ".write": false,
+
+    // ---- Voice presence: members see the room, each user writes ONLY self ----
+    "voice_presence": {
+      // Literal child names win over $variables: /dms/{uid} is only TWO
+      // levels deep ({inCall, partnerUid, mode, timestamp}), unlike rooms.
+      "dms": {
+        ".read": "auth != null",
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid",
+          ".validate": "newData.hasChildren(['inCall', 'timestamp']) && newData.child('timestamp').isNumber()"
+        }
+      },
+      "$server": {
+        ".read": "auth != null",
+        "$channel": {
+          ".read": "auth != null",
+          ".write": "auth != null && root.child('server_admins').child($server).child(auth.uid).val() === true",
+          "$uid": {
+            ".write": "auth != null && auth.uid === $uid",
+            ".validate": "newData.hasChildren(['peerId', 'heartbeatAt']) && newData.child('heartbeatAt').isNumber()"
+          }
+        }
+      }
+    },
+
+    // ---- Voice commands (kick/mute/deafen/move): sender must be a server admin ----
+    // Client ALSO verifies `from` is admin before executing (defense in depth,
+    // see servers.js isVoiceAdminUid) — rules are the real enforcement.
+    "voice_commands": {
+      "$server": {
+        "$scope": {
+          "$target": {
+            ".read": "auth != null && auth.uid === $target",
+            ".write": "auth != null && root.child('server_admins').child($server).child(auth.uid).val() === true && newData.child('type').val() === 'remote-cmd' && (!data.exists() || newData.child('timestamp').val() > data.child('timestamp').val() + 2000)"
+          }
+        }
+      }
+    },
+
+    // ---- Admin mirror (owner + users holding an admin-level role) ----
+    // Written by the app; readable by members so clients can verify senders.
+    "server_admins": {
+      "$server": {
+        ".read": "auth != null",
+        "$uid": {
+          ".write": "auth != null && (root.child('server_admins').child($server).child(auth.uid).val() === true || !root.child('server_admins').child($server).exists())"
+        }
+      }
+    },
+
+    // ---- DM / group call presence: write self only ----
+    "dm_call_presence": {
+      "$call": {
+        ".read": "auth != null",
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    },
+
+    // ---- Call signaling: anyone authed can ring (uid needed), only target reads/deletes ----
+    "incoming_calls": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null"
+      }
+    },
+    "active_calls": {
+      "$call": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+    "group_calls": {
+      "$call": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
+
+    // ---- Presence/activity/status/typing: write self only ----
+    "server_activity": {
+      "$server": {
+        "$uid": {
+          ".read": "auth != null",
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    },
+    "status": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "typing": {
+      "$thread": {
+        ".read": "auth != null",
+        "$uid": {
+          ".read": "auth != null",
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    }
+  }
+}

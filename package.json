@@ -1,0 +1,55 @@
+{
+  "name": "foxy",
+  "productName": "Foxy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "electron/desktopapp.js",
+  "scripts": {
+    "start": "electron .",
+    "start:wrapper": "electron ./electron/main.js",
+    "build:wrapper": "node build-wrapper.js",
+    "build": "electron-builder --win",
+    "build:web": "node buildweb.js",
+    "deploy": "node deploy.js",
+    "buildweb-bundle": "node buildweb-bundle.js",
+    "build:tailwind": "npx tailwindcss -i assets/css/tailwind.src.css -o assets/css/tailwind.css --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "build": {
+    "appId": "com.foxy.app",
+    "productName": "Foxy",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "assets/img/foxy.png",
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "artifactName": "Foxy.exe"
+    },
+    "files": [
+      "**/*"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "autoprefixer": "^10.4.19",
+    "cssnano": "^7.0.4",
+    "electron": "^44.4.2",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.23.0",
+    "fs-extra": "^11.2.0",
+    "javascript-obfuscator": "^5.3.1",
+    "postcss": "^8.4.40",
+    "sharp": "^0.33.4",
+    "tailwindcss": "^3.4.7",
+    "terser": "^5.31.3"
+  }
+}
