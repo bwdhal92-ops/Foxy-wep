@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>403 - ممنوع الوصول</title>
+<meta name="theme-color" content="#3b82f6">
+<link rel="shortcut icon" type="image/x-icon" href="../img/foxy.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:'Cairo',sans-serif;
+  background:#111214;
+  color:#F2F3F5;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+  position:relative;
+  direction:rtl
+}
+.orb{
+  position:absolute;border-radius:50%;filter:blur(100px);opacity:0.4;
+  animation:drift 20s infinite alternate ease-in-out
+}
+.orb-1{width:500px;height:500px;background:rgba(59,130,246,0.3);top:-150px;right:-100px}
+.orb-2{width:400px;height:400px;background:rgba(239,68,68,0.25);bottom:-100px;left:-50px;animation-delay:-5s;animation-duration:25s}
+.orb-3{width:300px;height:300px;background:rgba(16,185,129,0.15);top:30%;left:40%;animation-delay:-10s;animation-duration:18s}
+@keyframes drift{
+  0%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(-30px,50px) scale(1.1)}
+  66%{transform:translate(40px,-30px) scale(0.9)}
+  100%{transform:translate(-20px,20px) scale(1.05)}
+}
+.wrapper{position:relative;z-index:1;width:100%;max-width:480px;padding:20px;perspective:1000px}
+.card{
+  background:rgba(30,41,59,0.7);backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;padding:48px 40px;text-align:center;
+  box-shadow:0 24px 40px -8px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.1);
+  transform:translateY(30px);opacity:0;animation:entrance 0.8s cubic-bezier(0.2,0.8,0.2,1) forwards
+}
+@keyframes entrance{to{transform:translateY(0);opacity:1}}
+.logo{width:64px;height:64px;margin:0 auto 16px;background:#3b82f6;border-radius:20px;display:flex;justify-content:center;align-items:center;box-shadow:0 8px 24px rgba(59,130,246,0.4);animation:bounce 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.3s forwards;transform:scale(0.9);opacity:0}
+@keyframes bounce{to{transform:scale(1);opacity:1}}
+.logo img{width:40px;height:40px;border-radius:8px;object-fit:contain}
+.code{font-size:100px;font-weight:900;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin:8px 0;animation:fadeUp 0.5s ease 0.5s forwards;opacity:0;transform:translateY(10px)}
+.icon{font-size:48px;margin-bottom:8px;animation:fadeUp 0.5s ease 0.4s forwards;opacity:0;transform:translateY(10px)}
+.title{font-size:24px;font-weight:800;margin-bottom:8px;animation:fadeUp 0.5s ease 0.6s forwards;opacity:0;transform:translateY(10px)}
+.desc{font-size:15px;color:#94a3b8;line-height:1.7;margin-bottom:28px;animation:fadeUp 0.5s ease 0.7s forwards;opacity:0;transform:translateY(10px)}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:#3b82f6;color:#fff;text-decoration:none;
+  padding:14px 32px;border-radius:12px;font-weight:700;font-size:16px;font-family:inherit;
+  transition:all 0.25s cubic-bezier(0.2,0.8,0.2,1);
+  animation:fadeUp 0.5s ease 0.8s forwards;opacity:0;transform:translateY(10px);
+  box-shadow:0 4px 16px rgba(59,130,246,0.3)
+}
+.btn:hover{background:#2563eb;transform:translateY(-2px);box-shadow:0 6px 20px rgba(59,130,246,0.4)}
+.btn:active{transform:scale(0.97)}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+@media(max-width:480px){.card{padding:36px 24px}.code{font-size:72px}.title{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="wrapper">
+<div class="card">
+<div class="logo"><img src="../img/foxy.png" alt="Foxy"></div>
+<div class="icon">🚫</div>
+<div class="code">403</div>
+<div class="title">ممنوع الوصول</div>
+<div class="desc">عذراً، ليس لديك صلاحية للوصول إلى هذه الصفحة.<br>إذا كنت تعتقد أن هذا خطأ، يرجى التواصل مع الدعم.</div>
+<a href="../../" class="btn">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+العودة إلى الرئيسية
+</a>
+</div>
+</div>
+</body>
+</html>

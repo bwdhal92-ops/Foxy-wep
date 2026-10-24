@@ -1,0 +1,507 @@
+/*
+ * ClearVision compatibility layer for Foxy.
+ * ClearVision's original selectors target Discord's private DOM. Foxy keeps
+ * its own stable class names, so this layer maps the theme's public tokens
+ * and visual language to Foxy's equivalent surfaces.
+ */
+body.foxy-clearvision-compat {
+  --cv-foxy-accent: var(--main-color, #2780e6);
+  --cv-foxy-hover: var(--hover-color, #1e63b3);
+  --cv-foxy-success: var(--success-color, #43b581);
+  --cv-foxy-danger: var(--danger-color, #982929);
+  --cv-foxy-online: var(--online-color, #43b581);
+  --cv-foxy-idle: var(--idle-color, #faa61a);
+  --cv-foxy-dnd: var(--dnd-color, #982929);
+  --cv-foxy-streaming: var(--streaming-color, #593695);
+  --cv-foxy-offline: var(--offline-color, #808080);
+  --cv-foxy-bg-image: var(--background-image, none);
+  --cv-foxy-font: var(--main-font, 'Cairo', sans-serif);
+  --cv-foxy-code-font: var(--code-font, Consolas, monospace);
+  --cv-foxy-channel: var(--channel-normal, #cbd5e1);
+  --cv-foxy-channel-muted: var(--channel-muted, #94a3b8);
+  --cv-foxy-channel-hover: var(--channel-hover, #ffffff);
+  --cv-foxy-channel-selected: var(--channel-selected, #ffffff);
+  --cv-foxy-channel-selected-bg: var(--channel-selected-bg, var(--main-color, #2780e6));
+  --cv-foxy-input-shading: var(--input-shading, rgba(0, 0, 0, .3));
+  --cv-panel-opacity: .48;
+  font-family: var(--cv-foxy-font) !important;
+  background-image: var(--cv-foxy-bg-image) !important;
+  background-position: var(--background-position, center) !important;
+  background-size: var(--background-size, cover) !important;
+  background-attachment: var(--background-attachment, fixed) !important;
+  background-repeat: no-repeat !important;
+  background-filter: var(--background-filter, none);
+}
+
+/* Improve readability over bright wallpaper areas without replacing the
+   uploaded theme's typography or accent colors. */
+body.foxy-clearvision-compat {
+  --cv-readable-text: var(--normal-text, #f2f3f5);
+  --cv-readable-muted: var(--muted-text, #c4c9d1);
+}
+
+body.foxy-clearvision-compat .discord-main::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: rgba(8, 10, 18, .20);
+}
+
+body.foxy-clearvision-compat .discord-main > * {
+  position: relative;
+  z-index: 1;
+}
+
+body.foxy-clearvision-compat .text-gray-300,
+body.foxy-clearvision-compat .text-gray-400,
+body.foxy-clearvision-compat .text-gray-500,
+body.foxy-clearvision-compat .text-slate-300,
+body.foxy-clearvision-compat .text-slate-400,
+body.foxy-clearvision-compat .text-slate-500,
+body.foxy-clearvision-compat .text-zinc-400,
+body.foxy-clearvision-compat label,
+body.foxy-clearvision-compat .member-subtext {
+  color: var(--cv-readable-muted) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .9);
+}
+
+body.foxy-clearvision-compat .text-white:not([style*="color"]),
+body.foxy-clearvision-compat h1,
+body.foxy-clearvision-compat h2,
+body.foxy-clearvision-compat h3,
+body.foxy-clearvision-compat h4,
+body.foxy-clearvision-compat .member-name:not([style*="color"]),
+body.foxy-clearvision-compat .sender-name:not([style*="color"]) {
+  color: var(--cv-readable-text) !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, .9);
+}
+
+body.foxy-clearvision-compat .view-header,
+body.foxy-clearvision-compat .settings-nav-item,
+body.foxy-clearvision-compat .settings-tab-content,
+body.foxy-clearvision-compat .home-card,
+body.foxy-clearvision-compat .glass {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .72);
+}
+
+body.foxy-clearvision-compat .discord-rail {
+  background: rgba(17, 19, 24, .94) !important;
+  border-color: color-mix(in srgb, var(--cv-foxy-accent) 24%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .discord-sidebar,
+body.foxy-clearvision-compat .sidebar-bottom {
+  background: rgba(15, 17, 22, .88) !important;
+  border-color: color-mix(in srgb, var(--cv-foxy-accent) 18%, transparent) !important;
+}
+
+body.foxy-clearvision-compat.foxy-has-background-image .discord-main,
+body.foxy-clearvision-compat.foxy-has-background-image .discord-view {
+  background-color: transparent !important;
+}
+
+/* Let the selected background image show through the content area, like the
+   ClearVision preview, while retaining a soft glass layer for readability. */
+body.foxy-clearvision-compat.foxy-has-background-image .discord-main,
+body.foxy-clearvision-compat.foxy-has-background-image .discord-view,
+body.foxy-clearvision-compat.foxy-has-background-image .view-body,
+body.foxy-clearvision-compat.foxy-has-background-image #home-friends-panels {
+  background-color: transparent !important;
+}
+
+body.foxy-clearvision-compat .home-card,
+body.foxy-clearvision-compat .glass {
+  background: rgba(30, 33, 40, var(--cv-panel-opacity)) !important;
+  backdrop-filter: blur(12px) saturate(125%);
+  -webkit-backdrop-filter: blur(12px) saturate(125%);
+}
+
+/* Apply the same opacity to all large panels, including every settings tab.
+   Attribute selectors keep this compatible with Tailwind's generated class
+   names without changing the markup. */
+body.foxy-clearvision-compat [class~="bg-[#111214]"],
+body.foxy-clearvision-compat [class~="bg-slate-900/90"],
+body.foxy-clearvision-compat [class~="bg-[#1e1f22]"] {
+  background: rgba(30, 33, 40, var(--cv-panel-opacity)) !important;
+  backdrop-filter: blur(12px) saturate(125%);
+  -webkit-backdrop-filter: blur(12px) saturate(125%);
+}
+
+body.foxy-clearvision-compat #settings-banner-preview,
+body.foxy-clearvision-compat [id*="banner-preview"] {
+  background-color: transparent !important;
+  backdrop-filter: none;
+}
+
+/* Members and pinned-messages panels use their own dark surfaces, so they
+   need an explicit opacity override instead of inheriting the sidebar color. */
+body.foxy-clearvision-compat #server-members-sidebar {
+  background: transparent !important;
+}
+
+body.foxy-clearvision-compat #server-members-sidebar .glass,
+body.foxy-clearvision-compat #pinned-messages-panel {
+  background: rgba(30, 33, 40, .30) !important;
+  backdrop-filter: blur(14px) saturate(125%);
+  -webkit-backdrop-filter: blur(14px) saturate(125%);
+}
+
+body.foxy-clearvision-compat #server-members-sidebar .bg-black\/20,
+body.foxy-clearvision-compat #server-members-sidebar .bg-black\/10,
+body.foxy-clearvision-compat #pinned-messages-panel .bg-black\/20 {
+  background: rgba(0, 0, 0, .16) !important;
+}
+
+/* On narrow screens the main view is a sliding layer above the rail/sidebar.
+   Keep the layer opaque enough to prevent those panels from bleeding through
+   while preserving transparency inside its cards. */
+@media (max-width: 768px) {
+  body.foxy-clearvision-compat .discord-main {
+    z-index: 220 !important;
+    isolation: isolate;
+    /* Keep the ClearVision image inside the mobile layer instead of revealing
+       the rail/sidebar underneath the transparent content. */
+    background-color: #14161c !important;
+    background-image: linear-gradient(rgba(20, 22, 28, .54), rgba(20, 22, 28, .54)), var(--cv-foxy-bg-image, none) !important;
+    background-position: center !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
+  }
+
+  body.foxy-clearvision-compat.foxy-has-background-image .discord-view,
+  body.foxy-clearvision-compat.foxy-has-background-image .view-body {
+    position: relative;
+    z-index: 1;
+    background-color: transparent !important;
+  }
+
+  body.foxy-clearvision-compat .discord-rail,
+  body.foxy-clearvision-compat .discord-sidebar {
+    z-index: 110 !important;
+  }
+
+  /* Settings is a full-width mobile page. The section menu overlays it and
+     must not become a flex column that squeezes the forms into a narrow strip. */
+  body.foxy-clearvision-compat #view-settings,
+  body.foxy-clearvision-compat #view-server-settings,
+  body.foxy-clearvision-compat #view-settings > .view-body,
+  body.foxy-clearvision-compat #view-server-settings > .view-body {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  body.foxy-clearvision-compat #settings-tabs-scroll,
+  body.foxy-clearvision-compat #settings-tabs-content {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  body.foxy-clearvision-compat #settings-tabs-content > *,
+  body.foxy-clearvision-compat #settings-tabs-content .settings-tab-content {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  body.foxy-clearvision-compat #settings-sidebar,
+  body.foxy-clearvision-compat #ss-sidebar {
+    width: min(256px, 86vw) !important;
+    min-width: min(256px, 86vw) !important;
+    flex: 0 0 auto !important;
+  }
+
+  /* Keep settings full-width on mobile without overriding its ClearVision
+     background, transparency, or panel styling. */
+  body.foxy-clearvision-compat #view-settings,
+  body.foxy-clearvision-compat #view-server-settings {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100% !important;
+  }
+
+  body.foxy-clearvision-compat #view-settings > .view-body,
+  body.foxy-clearvision-compat #view-server-settings > .view-body {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  body.foxy-clearvision-compat #settings-tabs-scroll {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+}
+
+body.foxy-clearvision-compat .rail-btn-active,
+body.foxy-clearvision-compat .rail-server-btn-active,
+body.foxy-clearvision-compat .settings-nav-item.active,
+body.foxy-clearvision-compat .friends-tab-active {
+  background: var(--cv-foxy-accent) !important;
+  color: var(--foxy-user-text-color, #fff) !important;
+  border-color: var(--cv-foxy-accent) !important;
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--cv-foxy-accent) 35%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .rail-btn:hover,
+body.foxy-clearvision-compat .rail-server-btn:hover,
+body.foxy-clearvision-compat .settings-nav-item:hover,
+body.foxy-clearvision-compat .friends-tab:hover {
+  background: color-mix(in srgb, var(--cv-foxy-hover) 28%, transparent) !important;
+  color: #fff !important;
+  border-color: color-mix(in srgb, var(--cv-foxy-accent) 55%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .view-header,
+body.foxy-clearvision-compat .home-view-header {
+  background: rgba(17, 19, 24, .82) !important;
+  border-color: color-mix(in srgb, var(--cv-foxy-accent) 20%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .home-card,
+body.foxy-clearvision-compat .glass,
+body.foxy-clearvision-compat .settings-preview-card {
+  background: rgba(30, 33, 40, .78) !important;
+  border-color: color-mix(in srgb, var(--cv-foxy-accent) 22%, rgba(255, 255, 255, .08)) !important;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, .34), 0 0 0 1px color-mix(in srgb, var(--cv-foxy-accent) 8%, transparent) !important;
+}
+
+/* ClearVision channel-category compatibility for Foxy's markup. */
+body.foxy-clearvision-compat .server-channel-category-header {
+  color: var(--cv-readable-muted, var(--muted-text, #aeb4c0)) !important;
+  background: color-mix(in srgb, var(--cv-foxy-accent, #2780e6) 5%, transparent) !important;
+  border-radius: 8px !important;
+  padding: 5px 7px !important;
+}
+
+body.foxy-clearvision-compat .server-channel-category-header:hover {
+  color: var(--cv-readable-text, var(--normal-text, #f2f3f5)) !important;
+  background: color-mix(in srgb, var(--cv-foxy-hover, #1e63b3) 18%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .server-channel-category-header .category-arrow {
+  color: var(--cv-foxy-accent, #2780e6) !important;
+}
+
+body.foxy-clearvision-compat .server-channel-category-header .server-mini-btn {
+  color: var(--cv-readable-muted, var(--muted-text, #aeb4c0)) !important;
+}
+
+body.foxy-clearvision-compat .server-channel-category-header .server-mini-btn:hover,
+body.foxy-clearvision-compat .server-channel-category-header .server-mini-btn:focus {
+  color: var(--cv-foxy-accent, #2780e6) !important;
+}
+
+/* ClearVision user-popout compatibility for Foxy's member profile popout. */
+body.foxy-clearvision-compat .profile-popout {
+  background: var(--popout-shading, rgba(15, 17, 22, .88)) !important;
+  border: 1px solid color-mix(in srgb, var(--cv-foxy-accent) 28%, transparent) !important;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, .48), 0 0 0 1px color-mix(in srgb, var(--cv-foxy-accent) 10%, transparent) !important;
+  color: var(--cv-readable-text) !important;
+  overflow: hidden;
+}
+
+body.foxy-clearvision-compat .profile-popout .popout-banner {
+  background-color: color-mix(in srgb, var(--cv-foxy-accent) 28%, #111318) !important;
+  filter: var(--user-popout-filter, none);
+}
+
+body.foxy-clearvision-compat .profile-popout .popout-header,
+body.foxy-clearvision-compat .profile-popout .popout-body,
+body.foxy-clearvision-compat .profile-popout .popout-user-card {
+  background: color-mix(in srgb, var(--popout-shading, rgba(15, 17, 22, .88)) 86%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .profile-popout .popout-divider {
+  background: color-mix(in srgb, var(--cv-foxy-accent) 22%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .profile-popout .popout-item:hover {
+  background: color-mix(in srgb, var(--cv-foxy-hover) 22%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .profile-popout .popout-item div {
+  background: color-mix(in srgb, var(--cv-foxy-accent) 16%, transparent) !important;
+  color: var(--cv-foxy-accent) !important;
+}
+
+body.foxy-clearvision-compat .profile-popout .popout-status-dot {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--popout-shading, #111318) 85%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .server-channel-item {
+  color: var(--cv-foxy-channel) !important;
+}
+
+body.foxy-clearvision-compat .server-channel-item:hover {
+  color: var(--cv-foxy-channel-hover) !important;
+  background: color-mix(in srgb, var(--cv-foxy-hover) 20%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .server-channel-item-active {
+  color: var(--cv-foxy-channel-selected) !important;
+  background: color-mix(in srgb, var(--cv-foxy-channel-selected-bg) 28%, transparent) !important;
+  border-color: color-mix(in srgb, var(--cv-foxy-channel-selected-bg) 60%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .server-channel-timer-badge,
+body.foxy-clearvision-compat .server-channel-category-header {
+  color: var(--cv-foxy-channel-muted) !important;
+}
+
+body.foxy-clearvision-compat .status-online { background-color: var(--cv-foxy-online) !important; }
+body.foxy-clearvision-compat .status-idle { background-color: var(--cv-foxy-idle) !important; }
+body.foxy-clearvision-compat .status-dnd { background-color: var(--cv-foxy-dnd) !important; }
+body.foxy-clearvision-compat .status-streaming { background-color: var(--cv-foxy-streaming) !important; }
+body.foxy-clearvision-compat .status-offline { background-color: var(--cv-foxy-offline) !important; }
+
+body.foxy-clearvision-compat pre,
+body.foxy-clearvision-compat code,
+body.foxy-clearvision-compat .font-mono {
+  font-family: var(--cv-foxy-code-font) !important;
+}
+
+body.foxy-clearvision-compat input,
+body.foxy-clearvision-compat textarea,
+body.foxy-clearvision-compat [contenteditable='true'] {
+  background-color: var(--cv-foxy-input-shading) !important;
+}
+
+body.foxy-clearvision-compat button.bg-blue-500,
+body.foxy-clearvision-compat button.bg-blue-600,
+body.foxy-clearvision-compat button.bg-emerald-600,
+body.foxy-clearvision-compat .bg-blue-500,
+body.foxy-clearvision-compat .bg-blue-600 {
+  background-color: var(--cv-foxy-accent) !important;
+}
+
+body.foxy-clearvision-compat button:hover {
+  border-color: color-mix(in srgb, var(--cv-foxy-accent) 60%, transparent);
+}
+
+body.foxy-clearvision-compat input:focus,
+body.foxy-clearvision-compat textarea:focus,
+body.foxy-clearvision-compat [contenteditable='true']:focus {
+  border-color: var(--cv-foxy-accent) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cv-foxy-accent) 18%, transparent) !important;
+}
+
+body.foxy-clearvision-compat .text-blue-400,
+body.foxy-clearvision-compat .text-blue-500,
+body.foxy-clearvision-compat .text-emerald-400 {
+  color: var(--cv-foxy-accent) !important;
+}
+
+body.foxy-clearvision-compat .custom-scroll::-webkit-scrollbar-thumb {
+  background: var(--cv-foxy-accent) !important;
+}
+
+/* Generic readability layer for isolated third-party themes. */
+body.foxy-custom-theme .text-white:not([style*="color"]),
+body.foxy-custom-theme .text-gray-200:not([style*="color"]),
+body.foxy-custom-theme .text-gray-300:not([style*="color"]),
+body.foxy-custom-theme h1:not([style*="color"]),
+body.foxy-custom-theme h2:not([style*="color"]),
+body.foxy-custom-theme h3:not([style*="color"]),
+body.foxy-custom-theme h4:not([style*="color"]),
+body.foxy-custom-theme label:not([style*="color"]) {
+  color: var(--cv-readable-text, #f2f3f5) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .72);
+}
+
+body.foxy-custom-theme .text-gray-400:not([style*="color"]),
+body.foxy-custom-theme .text-gray-500:not([style*="color"]),
+body.foxy-custom-theme .text-slate-400:not([style*="color"]),
+body.foxy-custom-theme .text-slate-500:not([style*="color"]),
+body.foxy-custom-theme .text-zinc-400:not([style*="color"]) {
+  color: var(--cv-readable-muted, #c4c9d1) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .72);
+}
+
+/* Some Discord themes explicitly set black text. Keep Foxy's readable text
+   visible while preserving user-supplied inline colors. */
+body.foxy-custom-theme .text-black:not([style*="color"]),
+body.foxy-custom-theme .text-gray-600:not([style*="color"]),
+body.foxy-custom-theme .text-slate-600:not([style*="color"]),
+body.foxy-custom-theme .text-zinc-600:not([style*="color"]),
+body.foxy-custom-theme .discord-main,
+body.foxy-custom-theme .discord-sidebar,
+body.foxy-custom-theme .discord-rail,
+body.foxy-custom-theme .view-body,
+body.foxy-custom-theme .server-channels-header,
+body.foxy-custom-theme .server-channel-category-header {
+  color: var(--cv-readable-text, #f2f3f5) !important;
+}
+
+body.foxy-custom-theme.foxy-has-background-image .discord-main,
+body.foxy-custom-theme.foxy-has-background-image .discord-view,
+body.foxy-custom-theme.foxy-has-background-image .view-body {
+  background: transparent !important;
+}
+
+body.foxy-custom-theme.foxy-has-background-image .home-card,
+body.foxy-custom-theme.foxy-has-background-image .glass,
+body.foxy-custom-theme.foxy-has-background-image .settings-preview-card {
+  background: rgba(20, 22, 28, var(--foxy-theme-panel-opacity, .38)) !important;
+  backdrop-filter: blur(10px) saturate(125%);
+  -webkit-backdrop-filter: blur(10px) saturate(125%);
+}
+
+/* Keep all sidebar content readable across themes with dark text tokens. */
+body.foxy-custom-theme .discord-sidebar :where(p, span, button, h1, h2, h3, h4, label):not([style*="color"]),
+body.foxy-custom-theme .discord-rail :where(p, span, button, h1, h2, h3, h4, label):not([style*="color"]) {
+  color: var(--cv-readable-text, #f2f3f5) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .72);
+}
+
+body.foxy-custom-theme .discord-sidebar .text-gray-400:not([style*="color"]),
+body.foxy-custom-theme .discord-sidebar .text-gray-500:not([style*="color"]),
+body.foxy-custom-theme .discord-sidebar .text-slate-400:not([style*="color"]),
+body.foxy-custom-theme .discord-sidebar .text-slate-500:not([style*="color"]),
+body.foxy-custom-theme .discord-sidebar .text-zinc-400:not([style*="color"]) {
+  color: var(--cv-readable-muted, #c4c9d1) !important;
+}
+
+body.foxy-custom-theme .discord-sidebar .server-channel-item-active,
+body.foxy-custom-theme .discord-sidebar .server-channel-item-active span {
+  color: var(--cv-foxy-channel-selected, #fff) !important;
+}
+
+/* Foxy uses white as the safe default text color for uploaded themes. */
+body.foxy-custom-theme .discord-main :where(p, span, button, h1, h2, h3, h4, label, a):not([style*="color"]),
+body.foxy-custom-theme .discord-sidebar :where(p, span, button, h1, h2, h3, h4, label, a):not([style*="color"]),
+body.foxy-custom-theme .discord-rail :where(p, span, button, h1, h2, h3, h4, label, a):not([style*="color"]) {
+  color: var(--foxy-user-text-color, #fff) !important;
+}
+
+body.foxy-custom-theme :where(pre, code, .font-mono, summary, option):not([style*="color"]) {
+  color: var(--foxy-user-text-color, #fff) !important;
+}
+
+body.foxy-custom-theme pre,
+body.foxy-custom-theme code,
+body.foxy-custom-theme .font-mono,
+body.foxy-custom-theme kbd,
+body.foxy-custom-theme samp,
+body.foxy-custom-theme [class*="mono"] {
+  font-family: var(--cv-foxy-code-font, var(--code-font, 'Fira Code', 'JetBrains Mono', Consolas, monospace)) !important;
+}
+
+body.foxy-custom-theme :where(.text-gray-400, .text-gray-500, .text-slate-400, .text-slate-500, .text-zinc-400):not([style*="color"]) {
+  color: var(--foxy-user-muted-text, var(--cv-readable-muted, #c4c9d1)) !important;
+}
+
+@supports not (background: color-mix(in srgb, red 50%, blue)) {
+  body.foxy-clearvision-compat .discord-sidebar,
+  body.foxy-clearvision-compat .sidebar-bottom { background: rgba(15, 17, 22, .94) !important; }
+  body.foxy-clearvision-compat .home-card,
+  body.foxy-clearvision-compat .glass { border-color: rgba(39, 128, 230, .24) !important; }
+}

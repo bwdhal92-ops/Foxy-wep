@@ -1,0 +1,283 @@
+/* Foxy-native port of BetterAnimations' visual presets. */
+:root {
+  --foxy-ba-duration: 280ms;
+  --foxy-ba-ease: cubic-bezier(.2, .8, .2, 1);
+}
+
+/* Desktop sidebar motion follows the selected Foxy BetterAnimations preset. */
+@media (min-width: 701px) {
+  body.foxy-ba-enabled .discord-sidebar {
+    overflow: hidden;
+    flex: 0 0 310px;
+    transition: opacity var(--foxy-ba-duration) ease,
+      transform var(--foxy-ba-duration) var(--foxy-ba-ease),
+      filter var(--foxy-ba-duration) var(--foxy-ba-ease),
+      flex-basis var(--foxy-ba-duration) var(--foxy-ba-ease),
+      width var(--foxy-ba-duration) var(--foxy-ba-ease),
+      min-width var(--foxy-ba-duration) var(--foxy-ba-ease),
+      visibility var(--foxy-ba-duration);
+    will-change: opacity, transform, filter, flex-basis;
+    transform-origin: right center;
+  }
+
+  /* Members panel uses the same selected preset on desktop and mobile. */
+  #server-members-sidebar {
+    transition: opacity var(--foxy-ba-duration) ease,
+      transform var(--foxy-ba-duration) var(--foxy-ba-ease),
+      filter var(--foxy-ba-duration) var(--foxy-ba-ease),
+      width var(--foxy-ba-duration) var(--foxy-ba-ease),
+      min-width var(--foxy-ba-duration) var(--foxy-ba-ease);
+    will-change: opacity, transform, filter, width;
+    transform-origin: left center;
+  }
+
+  #server-members-sidebar:not(.active) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="fade"] #server-members-sidebar:not(.active) {
+    transform: none;
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="slip"] #server-members-sidebar:not(.active),
+  body.foxy-ba-enabled[data-foxy-ba-preset="slide"] #server-members-sidebar:not(.active),
+  body.foxy-ba-enabled[data-foxy-ba-preset="drawer"] #server-members-sidebar:not(.active) {
+    transform: translateX(-100%);
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="scale"] #server-members-sidebar:not(.active),
+  body.foxy-ba-enabled[data-foxy-ba-preset="point"] #server-members-sidebar:not(.active) {
+    transform: scaleX(.72);
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="blur"] #server-members-sidebar:not(.active) {
+    filter: blur(18px);
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="flip"] #server-members-sidebar:not(.active) {
+    transform: perspective(900px) rotateY(-82deg) scale(.88);
+  }
+
+  @media (max-width: 768px) {
+    #server-members-sidebar:not(.active) {
+      opacity: 0;
+      transform: translateY(110%);
+      transition: opacity var(--foxy-ba-duration) ease,
+        transform var(--foxy-ba-duration) var(--foxy-ba-ease),
+        filter var(--foxy-ba-duration) var(--foxy-ba-ease) !important;
+    }
+
+    #server-members-sidebar.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    body.foxy-ba-enabled[data-foxy-ba-preset="fade"] #server-members-sidebar:not(.active) {
+      transform: translateY(0);
+    }
+
+    body.foxy-ba-enabled[data-foxy-ba-preset="scale"] #server-members-sidebar:not(.active),
+    body.foxy-ba-enabled[data-foxy-ba-preset="point"] #server-members-sidebar:not(.active) {
+      transform: translateY(110%) scale(.88);
+    }
+
+    body.foxy-ba-enabled[data-foxy-ba-preset="blur"] #server-members-sidebar:not(.active) {
+      filter: blur(18px);
+    }
+  }
+
+  body.foxy-ba-disabled #server-members-sidebar,
+  body.mode-turbo #server-members-sidebar {
+    transition: none !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body.foxy-ba-enabled #server-members-sidebar {
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body.desktop-sidebar-hidden .discord-sidebar {
+    flex-basis: 0 !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="fade"].desktop-sidebar-hidden .discord-sidebar {
+    opacity: 0;
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="slip"].desktop-sidebar-hidden .discord-sidebar,
+  body.foxy-ba-enabled[data-foxy-ba-preset="slide"].desktop-sidebar-hidden .discord-sidebar,
+  body.foxy-ba-enabled[data-foxy-ba-preset="drawer"].desktop-sidebar-hidden .discord-sidebar {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="scale"].desktop-sidebar-hidden .discord-sidebar,
+  body.foxy-ba-enabled[data-foxy-ba-preset="point"].desktop-sidebar-hidden .discord-sidebar {
+    opacity: 0;
+    transform: scaleX(.72);
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="blur"].desktop-sidebar-hidden .discord-sidebar {
+    opacity: 0;
+    filter: blur(18px);
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="flip"].desktop-sidebar-hidden .discord-sidebar {
+    opacity: 0;
+    transform: perspective(900px) rotateY(82deg) scale(.88);
+  }
+
+  body.foxy-ba-disabled .discord-sidebar,
+  body.mode-turbo .discord-sidebar {
+    transition: none !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    body.foxy-ba-enabled .discord-sidebar {
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* The members panel becomes a full-screen drawer on small screens. */
+@media (max-width: 700px) {
+  #server-members-sidebar {
+    transition: opacity var(--foxy-ba-duration) ease,
+      transform var(--foxy-ba-duration) var(--foxy-ba-ease),
+      filter var(--foxy-ba-duration) var(--foxy-ba-ease) !important;
+  }
+
+  #server-members-sidebar:not(.active) {
+    opacity: 0;
+    transform: translateY(110%);
+    pointer-events: none;
+  }
+
+  #server-members-sidebar.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="fade"] #server-members-sidebar:not(.active) {
+    transform: translateY(0);
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="scale"] #server-members-sidebar:not(.active),
+  body.foxy-ba-enabled[data-foxy-ba-preset="point"] #server-members-sidebar:not(.active) {
+    transform: translateY(110%) scale(.88);
+  }
+
+  body.foxy-ba-enabled[data-foxy-ba-preset="blur"] #server-members-sidebar:not(.active) {
+    filter: blur(18px);
+  }
+
+  body.foxy-ba-disabled #server-members-sidebar,
+  body.mode-turbo #server-members-sidebar {
+    transition: none !important;
+  }
+}
+
+.foxy-animations-select-wrap {
+  position: relative;
+  display: block;
+}
+
+.foxy-animations-select-wrap::after {
+  content: "⌄";
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-58%);
+  color: rgba(148, 163, 184, .85);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.foxy-animations-select {
+  width: 100%;
+  min-height: 40px;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 9px 12px 9px 34px;
+  border: 1px solid rgba(255, 255, 255, .10);
+  border-radius: 12px;
+  outline: none;
+  color: #e5e7eb;
+  background: linear-gradient(135deg, rgba(30, 41, 59, .72), rgba(9, 11, 16, .78));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035), 0 8px 20px rgba(0, 0, 0, .12);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.foxy-animations-select:hover {
+  border-color: rgba(59, 130, 246, .45);
+  background: linear-gradient(135deg, rgba(37, 50, 85, .82), rgba(9, 11, 16, .86));
+}
+
+.foxy-animations-select:focus {
+  border-color: rgba(59, 130, 246, .75);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, .12), inset 0 1px 0 rgba(255, 255, 255, .04);
+}
+
+.foxy-animations-select option {
+  color: #e5e7eb;
+  background: #11151d;
+  font-weight: 600;
+}
+
+body.foxy-ba-enabled .foxy-ba-animated {
+  animation-duration: var(--foxy-ba-duration);
+  animation-timing-function: var(--foxy-ba-ease);
+  animation-fill-mode: both;
+  will-change: opacity, transform, filter;
+}
+
+body.foxy-ba-enabled .foxy-ba-fade { animation-name: foxy-ba-fade; }
+body.foxy-ba-enabled .foxy-ba-slip { animation-name: foxy-ba-slip; }
+body.foxy-ba-enabled .foxy-ba-slide { animation-name: foxy-ba-slide; }
+body.foxy-ba-enabled .foxy-ba-scale { animation-name: foxy-ba-scale; }
+body.foxy-ba-enabled .foxy-ba-point { animation-name: foxy-ba-point; }
+body.foxy-ba-enabled .foxy-ba-blur { animation-name: foxy-ba-blur; }
+body.foxy-ba-enabled .foxy-ba-flip { animation-name: foxy-ba-flip; transform-origin: center top; }
+body.foxy-ba-enabled .foxy-ba-drawer { animation-name: foxy-ba-drawer; transform-origin: right center; }
+
+@keyframes foxy-ba-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes foxy-ba-slip { from { opacity: 0; transform: translateY(42px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes foxy-ba-slide { from { opacity: 0; transform: translateX(64px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes foxy-ba-scale { from { opacity: 0; transform: scale(.72); } to { opacity: 1; transform: scale(1); } }
+@keyframes foxy-ba-point { from { opacity: 0; transform: scale(.35) translateY(18px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes foxy-ba-blur { from { opacity: 0; filter: blur(18px); transform: scale(1.04); } to { opacity: 1; filter: blur(0); transform: scale(1); } }
+@keyframes foxy-ba-flip { from { opacity: 0; transform: perspective(900px) rotateY(-82deg) scale(.88); } to { opacity: 1; transform: perspective(900px) rotateY(0) scale(1); } }
+@keyframes foxy-ba-drawer { from { opacity: 0; transform: translateX(100%) scale(.96); } to { opacity: 1; transform: translateX(0) scale(1); } }
+
+body.foxy-ba-disabled .foxy-ba-animated,
+body.mode-turbo .foxy-ba-animated { animation: none !important; will-change: auto; }
+
+@media (prefers-reduced-motion: reduce) {
+  body.foxy-ba-enabled .foxy-ba-animated { animation: none !important; }
+  /* The Foxy setting is an explicit user choice and can opt back in. */
+  body.foxy-ba-force-motion.foxy-ba-enabled .foxy-ba-animated {
+    animation-duration: var(--foxy-ba-duration) !important;
+    animation-fill-mode: both !important;
+  }
+  body.foxy-ba-force-motion.foxy-ba-enabled .foxy-ba-fade { animation-name: foxy-ba-fade !important; }
+  body.foxy-ba-force-motion.foxy-ba-enabled .foxy-ba-slip { animation-name: foxy-ba-slip !important; }
+  body.foxy-ba-force-motion.foxy-ba-enabled .foxy-ba-slide { animation-name: foxy-ba-slide !important; }
+  body.foxy-ba-force-motion.foxy-ba-enabled .foxy-ba-scale { animation-name: foxy-ba-scale !important; }
+  body.foxy-ba-force-motion.foxy-ba-enabled .foxy-ba-point { animation-name: foxy-ba-point !important; }
+  body.foxy-ba-force-motion.foxy-ba-enabled .foxy-ba-blur { animation-name: foxy-ba-blur !important; }
+  body.foxy-ba-force-motion.foxy-ba-enabled .foxy-ba-flip { animation-name: foxy-ba-flip !important; }
+  body.foxy-ba-force-motion.foxy-ba-enabled .foxy-ba-drawer { animation-name: foxy-ba-drawer !important; }
+}
